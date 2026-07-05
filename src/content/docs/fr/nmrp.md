@@ -88,11 +88,13 @@ Un **module** est un dossier `Server/modules/<name>/` exposant un descripteur (`
 
 ```lua
 ---@class AppContext
----@field db       Database
----@field models   table<string, Model>
----@field services table<string, Service>
----@field config   Config
----@field events   EventEmitter
+---@field db NormOrm
+---@field models table<string, any>
+---@field services table<string, any>
+---@field config table
+---@field events EventEmitter
+---@field settings table<string, any>
+---@field logger Logger
 ```
 
 Un service atteint les autres via `ctx.services.x` — et déclare `depends = { "x" }` pour que le loader démarre cette dépendance en premier.
