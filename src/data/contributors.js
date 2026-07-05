@@ -8,6 +8,18 @@
 
 const ORG = "No-More-RP";
 
+// Highlighted roles → a badge on the contributors page.
+// Keys are GitHub logins (case-insensitive); value is a role key.
+// Add or remove people here. Role labels/colors live in Contributors.astro.
+const TEAM = {
+  justgodwork: "core",
+  thibaultpointurier: "core",
+};
+
+// Lower = higher in the list. Team members are pinned above everyone else.
+const ROLE_PRIORITY = { core: 0, maintainer: 1 };
+const rank = (role) => (role in ROLE_PRIORITY ? ROLE_PRIORITY[role] : 99);
+
 // Used only if the live org repo listing can't be fetched.
 const FALLBACK_REPOS = [
   "nmrp",
@@ -79,6 +91,7 @@ async function fetchContributors() {
           avatar: c.avatar_url,
           url: c.html_url,
           contributions: 0,
+          role: TEAM[c.login.toLowerCase()] || null,
         };
         cur.contributions += c.contributions || 0;
         byLogin.set(c.login, cur);
@@ -86,7 +99,9 @@ async function fetchContributors() {
     }),
   );
 
-  return [...byLogin.values()].sort(
-    (a, b) => b.contributions - a.contributions,
-  );
+  // Team members first (by role), then everyone else by contribution count.
+  return [...byLogin.values()].sort((a, b) => {
+    const dr = rank(a.role) - rank(b.role);
+    return dr !== 0 ? dr : b.contributions - a.contributions;
+  });
 }

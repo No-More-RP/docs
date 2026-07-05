@@ -1,6 +1,7 @@
 ---
 import Base from "./Base.astro";
 import LangSwitch from "../components/LangSwitch.astro";
+import Search from "../components/Search.astro";
 import { docsNav, docsUi } from "../data/docs-nav.js";
 import { SITE_URL, DOCS_URL, DISCORD_URL } from "../data/site.js";
 
@@ -48,6 +49,11 @@ const pageTitle = `${title} — NoMoreRP Docs`;
 // Canonical URL + per-page Open Graph card (see src/pages/og/[...route].ts).
 const canonical = `${DOCS_URL}/${isEn ? "en/" : ""}${slug}`;
 const ogImage = `${DOCS_URL}/og/${isEn ? "en" : "fr"}/${slug}.png`;
+
+// Labels for the injected "copy code" buttons.
+const copyLabels = isEn
+    ? { copy: "Copy", copied: "Copied!" }
+    : { copy: "Copier", copied: "Copié !" };
 ---
 
 <Base
@@ -76,6 +82,7 @@ const ogImage = `${DOCS_URL}/og/${isEn ? "en" : "fr"}/${slug}.png`;
                     <span class="brand-docs">{ui.docsLabel}</span>
                 </a>
                 <div class="dnav-right">
+                    <Search lang={lang} />
                     <a href={homeHref} class="dnav-lnk">{ui.backToSite}</a>
                     <LangSwitch
                         isEn={isEn}
@@ -266,7 +273,7 @@ const ogImage = `${DOCS_URL}/og/${isEn ? "en" : "fr"}/${slug}.png`;
 
             <!-- CONTENT -->
             <main class="content">
-                <article class="prose">
+                <article class="prose" data-pagefind-body>
                     <slot />
                 </article>
 
@@ -743,6 +750,22 @@ const ogImage = `${DOCS_URL}/og/${isEn ? "en" : "fr"}/${slug}.png`;
     .prose a:hover {
         border-bottom-color: #3dd6f3;
     }
+    /* Links wrapping inline code (e.g. package names): drop the underline so it
+       doesn't cut across the rounded code pill — the pill is the affordance. */
+    .prose a:has(> code) {
+        border-bottom: none;
+    }
+    .prose a > code {
+        color: #3dd6f3;
+        border-color: rgba(45, 200, 235, 0.32);
+        transition:
+            background 0.15s,
+            border-color 0.15s;
+    }
+    .prose a:hover > code {
+        background: rgba(45, 200, 235, 0.16);
+        border-color: rgba(45, 200, 235, 0.55);
+    }
     .prose strong {
         color: #e7e9ee;
         font-weight: 650;
@@ -790,6 +813,60 @@ const ogImage = `${DOCS_URL}/og/${isEn ? "en" : "fr"}/${slug}.png`;
         padding: 0;
         font-size: inherit;
         color: inherit;
+    }
+
+    /* Copy button (wrapper + button are injected by the script below). */
+    .prose .code-wrap {
+        position: relative;
+        margin: 0 0 20px;
+    }
+    .prose .code-wrap > pre {
+        margin: 0;
+    }
+    .prose .copy-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 7px;
+        color: #9098a6;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11.5px;
+        line-height: 1;
+        padding: 5px 8px;
+        cursor: pointer;
+        opacity: 0;
+        transition:
+            opacity 0.15s,
+            color 0.15s,
+            border-color 0.15s,
+            background 0.15s;
+    }
+    .prose .copy-btn svg {
+        flex-shrink: 0;
+    }
+    .prose .code-wrap:hover .copy-btn,
+    .prose .copy-btn:focus-visible {
+        opacity: 1;
+    }
+    .prose .copy-btn:hover {
+        color: #e7e9ee;
+        border-color: rgba(45, 200, 235, 0.4);
+        background: rgba(45, 200, 235, 0.08);
+    }
+    .prose .copy-btn.copied {
+        opacity: 1;
+        color: #3dd6f3;
+        border-color: rgba(45, 200, 235, 0.5);
+    }
+    @media (hover: none) {
+        .prose .copy-btn {
+            opacity: 1;
+        }
     }
 
     /* Tables */
@@ -862,5 +939,48 @@ const ogImage = `${DOCS_URL}/og/${isEn ? "en" : "fr"}/${slug}.png`;
             const collapsed = group.classList.toggle("collapsed");
             btn.setAttribute("aria-expanded", collapsed ? "false" : "true");
         });
+    });
+</script>
+
+<script define:vars={{ labels: copyLabels }}>
+    // Add a "copy" button to every code block in the article.
+    const copyIcon =
+        '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>';
+    const checkIcon =
+        '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
+
+    document.querySelectorAll(".prose pre").forEach((pre) => {
+        const code = pre.querySelector("code");
+        if (!code) return;
+
+        // Wrap so the button stays put while the code scrolls horizontally.
+        const wrap = document.createElement("div");
+        wrap.className = "code-wrap";
+        pre.parentNode.insertBefore(wrap, pre);
+        wrap.appendChild(pre);
+
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "copy-btn";
+        btn.setAttribute("aria-label", labels.copy);
+        btn.innerHTML = copyIcon + "<span>" + labels.copy + "</span>";
+
+        let timer;
+        btn.addEventListener("click", async () => {
+            try {
+                await navigator.clipboard.writeText(code.textContent);
+                btn.classList.add("copied");
+                btn.innerHTML = checkIcon + "<span>" + labels.copied + "</span>";
+                clearTimeout(timer);
+                timer = setTimeout(() => {
+                    btn.classList.remove("copied");
+                    btn.innerHTML = copyIcon + "<span>" + labels.copy + "</span>";
+                }, 1800);
+            } catch (e) {
+                /* clipboard unavailable (non-secure context) */
+            }
+        });
+
+        wrap.appendChild(btn);
     });
 </script>

@@ -14,6 +14,7 @@ const copy = {
     contributions: 'contributions',
     empty: 'Impossible de charger les contributeurs pour le moment.',
     seeGh: 'Voir sur GitHub',
+    roles: { core: 'Core team', maintainer: 'Mainteneur' },
   },
   en: {
     intro:
@@ -22,6 +23,7 @@ const copy = {
     contributions: 'contributions',
     empty: 'Couldn’t load contributors right now.',
     seeGh: 'See them on GitHub',
+    roles: { core: 'Core team', maintainer: 'Maintainer' },
   },
 }[lang];
 
@@ -52,7 +54,14 @@ const contributors = await getContributors();
                 class="contrib-av"
               />
               <span class="contrib-info">
-                <span class="contrib-name">{c.login}</span>
+                <span class="contrib-namerow">
+                  <span class="contrib-name">{c.login}</span>
+                  {c.role && (
+                    <span class={`contrib-badge role-${c.role}`}>
+                      {copy.roles[c.role] ?? c.role}
+                    </span>
+                  )}
+                </span>
                 <span class="contrib-meta">
                   {c.contributions} {copy.contributions}
                 </span>
@@ -133,6 +142,12 @@ const contributors = await getContributors();
     flex-direction: column;
     min-width: 0;
   }
+  .contrib-namerow {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    min-width: 0;
+  }
   .contrib-name {
     font-family: "Inter", sans-serif;
     font-weight: 600;
@@ -141,6 +156,27 @@ const contributors = await getContributors();
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+  .contrib-badge {
+    flex-shrink: 0;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 9.5px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 5px;
+    line-height: 1.4;
+  }
+  .role-core {
+    color: #3dd6f3;
+    background: rgba(45, 200, 235, 0.12);
+    border: 1px solid rgba(45, 200, 235, 0.32);
+  }
+  .role-maintainer {
+    color: #c084fc;
+    background: rgba(192, 132, 252, 0.12);
+    border: 1px solid rgba(192, 132, 252, 0.32);
   }
   .contrib-meta {
     font-size: 12px;

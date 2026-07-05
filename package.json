@@ -6,7 +6,7 @@
   "packageManager": "pnpm@10.30.3",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && pagefind --site dist",
     "preview": "astro preview",
     "astro": "astro"
   },
@@ -14,5 +14,8 @@
     "astro": "^4.15.0",
     "astro-og-canvas": "0.7.0",
     "canvaskit-wasm": "^0.39.1"
+  },
+  "devDependencies": {
+    "pagefind": "^1.5.2"
   }
 }
