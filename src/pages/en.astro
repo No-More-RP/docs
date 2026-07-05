@@ -12,6 +12,11 @@ import { softwareAppSchema } from '../data/schema.js';
   canonical={`${SITE_URL}/en`}
   image={`${SITE_URL}/og/en/home.png`}
   schema={softwareAppSchema('en')}
+  alternates={[
+    { hreflang: 'fr', href: `${SITE_URL}/` },
+    { hreflang: 'en', href: `${SITE_URL}/en` },
+    { hreflang: 'x-default', href: `${SITE_URL}/` },
+  ]}
 >
   <Landing lang="en" />
 </Base>

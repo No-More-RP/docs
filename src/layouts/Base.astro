@@ -21,6 +21,8 @@ interface Props {
     type?: "website" | "article";
     /** JSON-LD structured data — one object or several. */
     schema?: object | object[];
+    /** hreflang alternates: [{ hreflang, href }] for the FR/EN versions. */
+    alternates?: { hreflang: string; href: string }[];
 }
 
 const DEFAULT_DESC =
@@ -34,6 +36,7 @@ const {
     canonical,
     type = "website",
     schema,
+    alternates = [],
 } = Astro.props;
 
 const ogLocale = lang === "fr" ? "fr_FR" : "en_US";
@@ -51,6 +54,11 @@ const ld = (obj) => JSON.stringify(obj).replace(/</g, "\\u003c");
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="description" content={description} />
         {canonical && <link rel="canonical" href={canonical} />}
+        {
+            alternates.map((a) => (
+                <link rel="alternate" hreflang={a.hreflang} href={a.href} />
+            ))
+        }
         <link
             rel="icon"
             type="image/png"

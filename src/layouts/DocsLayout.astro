@@ -70,6 +70,15 @@ const pageTitle = `${title} — NoMoreRP Docs`;
 const canonical = `${DOCS_URL}/${isEn ? "en/" : ""}${slug}`;
 const ogImage = `${DOCS_URL}/og/${isEn ? "en" : "fr"}/${slug}.png`;
 
+// hreflang alternates (FR ↔ EN of the same page).
+const frUrl = `${DOCS_URL}/${slug}`;
+const enUrl = `${DOCS_URL}/en/${slug}`;
+const alternates = [
+    { hreflang: "fr", href: frUrl },
+    { hreflang: "en", href: enUrl },
+    { hreflang: "x-default", href: frUrl },
+];
+
 // Labels for the injected "copy code" buttons.
 const copyLabels = isEn
     ? { copy: "Copy", copied: "Copied!" }
@@ -120,6 +129,7 @@ const updatedLabel = updated
     image={ogImage}
     type="article"
     schema={schema}
+    alternates={alternates}
 >
     <div class="docs">
         <div class="glow"></div>
@@ -227,6 +237,7 @@ const updatedLabel = updated
                             <a
                                 href={href("contributors")}
                                 class={`side-top-lnk${slug === "contributors" ? " active" : ""}`}
+                                aria-current={slug === "contributors" ? "page" : undefined}
                             >
                                 <svg
                                     width="16"
@@ -329,6 +340,7 @@ const updatedLabel = updated
                                                 <a
                                                     href={href(item.slug)}
                                                     class={`side-lnk${item.slug === slug ? " active" : ""}`}
+                                                    aria-current={item.slug === slug ? "page" : undefined}
                                                 >
                                                     {item.label}
                                                 </a>

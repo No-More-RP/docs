@@ -177,6 +177,18 @@ const docsHref = isEn
                 </a>
                 <a href={docsHref} class="btn-ghost">{t.hero_cta2}</a>
             </div>
+            <a
+                href="https://github.com/No-More-RP/nmrp"
+                target="_blank"
+                rel="noopener"
+                class="gh-stars"
+                data-gh-stars-link
+                hidden
+            >
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 18.9 6.1 21l1.2-6.5L2.5 9.9l6.6-.9z"/></svg>
+                <b data-gh-stars></b>
+                <span>{isEn ? "stars on GitHub" : "stars sur GitHub"}</span>
+            </a>
             <div class="stats">
                 {
                     t.stats.map((s) => (
@@ -228,7 +240,7 @@ Packages/
     </div>
 
     <!-- FEATURES -->
-    <section id="features" class="section">
+    <section id="features" class="section" data-reveal>
         <div class="section-head">
             <p class="eyebrow">{t.feat_eyebrow}</p>
             <h2 class="h2">{t.feat_title}</h2>
@@ -261,7 +273,7 @@ Packages/
     </section>
 
     <!-- API / CODE -->
-    <section id="api" class="section">
+    <section id="api" class="section" data-reveal>
         <div class="api-grid">
             <div>
                 <p class="eyebrow">{t.api_eyebrow}</p>
@@ -324,8 +336,80 @@ Packages/
         </div>
     </section>
 
+    <!-- ARCHITECTURE -->
+    <section id="architecture" class="section" data-reveal>
+        <div class="section-head">
+            <p class="eyebrow">Architecture</p>
+            <h2 class="h2">{isEn ? "MVC, wired for you" : "Le MVC, câblé pour toi"}</h2>
+            <p class="lead">
+                {
+                    isEn
+                        ? "A loader boots everything and a DI registry wires your models, views and controllers — on top of dependency-free packages."
+                        : "Un loader démarre tout et un registre DI relie tes modèles, vues et contrôleurs — posés sur des packages sans dépendances."
+                }
+            </p>
+        </div>
+
+        <div class="arch">
+            <!-- Layer 1: your MVC modules -->
+            <div class="arch-layer">
+                <span class="arch-tag">{isEn ? "Your modules" : "Tes modules"}</span>
+                <div class="arch-mvc">
+                    <div class="arch-cell">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#3dd6f3" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c4.4 0 8 1.3 8 3s-3.6 3-8 3-8-1.3-8-3 3.6-3 8-3z"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg>
+                        <b>Model</b><span>{isEn ? "data · Norm ORM" : "données · Norm ORM"}</span>
+                    </div>
+                    <div class="arch-cell">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#3dd6f3" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+                        <b>View</b><span>WebUI · HUD</span>
+                    </div>
+                    <div class="arch-cell">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#3dd6f3" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="8" cy="6" r="1.6" fill="#3dd6f3" stroke="none"/><circle cx="15" cy="12" r="1.6" fill="#3dd6f3" stroke="none"/><circle cx="10" cy="18" r="1.6" fill="#3dd6f3" stroke="none"/></svg>
+                        <b>Controller</b><span>{isEn ? "engine wiring" : "câblage moteur"}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="arch-conn" aria-hidden="true">
+                <svg viewBox="0 0 24 34" fill="none" stroke="#3dd6f3" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v26"/><path d="M6 22l6 6 6-6"/></svg>
+            </div>
+
+            <!-- Layer 2: nmrp core -->
+            <div class="arch-layer arch-core">
+                <span class="arch-tag arch-tag-core">nmrp · core</span>
+                <div class="arch-core-row">
+                    <span class="arch-chip">Loader</span>
+                    <svg class="arch-rarrow" viewBox="0 0 34 24" fill="none" stroke="#3dd6f3" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12h26"/><path d="M22 6l6 6-6 6"/></svg>
+                    <span class="arch-chip">DI Registry</span>
+                </div>
+                <p class="arch-note">
+                    {
+                        isEn
+                            ? "resolves services & wires every module in dependency order"
+                            : "résout les services & câble chaque module dans l’ordre des dépendances"
+                    }
+                </p>
+            </div>
+
+            <div class="arch-conn" aria-hidden="true">
+                <svg viewBox="0 0 24 34" fill="none" stroke="#3dd6f3" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v26"/><path d="M6 22l6 6 6-6"/></svg>
+            </div>
+
+            <!-- Layer 3: packages -->
+            <div class="arch-layer">
+                <span class="arch-tag">{isEn ? "Dependency-free Lua packages" : "Packages Lua sans dépendances"}</span>
+                <div class="arch-pkgs">
+                    <div class="arch-pkg"><b>nmrp-promise</b><span>async</span></div>
+                    <div class="arch-pkg"><b>nmrp-norm</b><span>ORM</span></div>
+                    <div class="arch-pkg"><b>nmrp-rpc</b><span>RPC</span></div>
+                    <div class="arch-pkg"><b>nmrp-locale</b><span>i18n</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- MODULES -->
-    <section id="modules" class="section">
+    <section id="modules" class="section" data-reveal>
         <div class="section-head">
             <p class="eyebrow">{t.mod_eyebrow}</p>
             <h2 class="h2">{t.mod_title}</h2>
@@ -347,7 +431,7 @@ Packages/
     </section>
 
     <!-- INSTALL -->
-    <section id="install" class="section section-narrow">
+    <section id="install" class="section section-narrow" data-reveal>
         <div class="section-head">
             <p class="eyebrow">{t.ins_eyebrow}</p>
             <h2 class="h2">{t.ins_title}</h2>
@@ -396,7 +480,7 @@ git clone <span class="c-blue">.../nmrp-rpc nmrp-locale</span>
     </section>
 
     <!-- COMMUNITY CTA -->
-    <section class="section cta-section">
+    <section class="section cta-section" data-reveal>
         <div class="cta-box">
             <div class="cta-glow"></div>
             <div class="cta-inner">
@@ -509,6 +593,65 @@ git clone <span class="c-blue">.../nmrp-rpc nmrp-locale</span>
             });
         });
     });
+
+    // Scroll reveal — skipped entirely if the user prefers reduced motion.
+    (function () {
+        const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+        const els = document.querySelectorAll("[data-reveal]");
+        if (reduce || !("IntersectionObserver" in window)) return;
+        els.forEach((el) => el.classList.add("reveal"));
+        const io = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((e) => {
+                    if (e.isIntersecting) {
+                        e.target.classList.add("reveal-in");
+                        io.unobserve(e.target);
+                    }
+                });
+            },
+            { rootMargin: "0px 0px -8% 0px", threshold: 0.08 },
+        );
+        els.forEach((el) => io.observe(el));
+    })();
+
+    // Live GitHub stars — total across the org, cached 24h in localStorage.
+    (function () {
+        const link = document.querySelector("[data-gh-stars-link]");
+        const out = document.querySelector("[data-gh-stars]");
+        if (!link || !out) return;
+        const KEY = "nmrp:stars:nmrp";
+        const TTL = 24 * 60 * 60 * 1000;
+
+        function show(n) {
+            out.textContent = new Intl.NumberFormat().format(n);
+            link.hidden = false;
+        }
+        try {
+            const raw = localStorage.getItem(KEY);
+            if (raw) {
+                const { t, n } = JSON.parse(raw);
+                if (Date.now() - t < TTL && typeof n === "number") {
+                    show(n);
+                    return;
+                }
+            }
+        } catch (e) {}
+
+        fetch("https://api.github.com/repos/No-More-RP/nmrp")
+            .then((r) => (r.ok ? r.json() : null))
+            .then((repo) => {
+                if (!repo || typeof repo.stargazers_count !== "number") return;
+                const total = repo.stargazers_count;
+                try {
+                    localStorage.setItem(
+                        KEY,
+                        JSON.stringify({ t: Date.now(), n: total }),
+                    );
+                } catch (e) {}
+                if (total > 0) show(total);
+            })
+            .catch(() => {});
+    })();
 </script>
 
 <style>
@@ -1023,6 +1166,163 @@ git clone <span class="c-blue">.../nmrp-rpc nmrp-locale</span>
         background: #0d0f14 !important;
     }
 
+    /* GitHub stars (populated client-side) */
+    .gh-stars {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        margin-top: 20px;
+        text-decoration: none;
+        color: #9098a6;
+        font-size: 13.5px;
+        transition: color 0.15s;
+    }
+    .gh-stars:hover {
+        color: #e7e9ee;
+    }
+    .gh-stars svg {
+        color: #fbbf24;
+        flex-shrink: 0;
+    }
+    .gh-stars b {
+        color: #e7e9ee;
+        font-weight: 700;
+    }
+
+    /* Scroll reveal (progressive enhancement — class added by JS only) */
+    .reveal {
+        opacity: 0;
+        transform: translateY(22px);
+        transition:
+            opacity 0.6s ease,
+            transform 0.6s ease;
+    }
+    .reveal.reveal-in {
+        opacity: 1;
+        transform: none;
+    }
+
+    /* architecture diagram */
+    .arch {
+        max-width: 660px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+    }
+    .arch-layer {
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.02);
+        border-radius: 16px;
+        padding: 18px 20px 20px;
+    }
+    .arch-tag {
+        display: block;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 10.5px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #6b7280;
+        margin-bottom: 14px;
+    }
+    .arch-tag-core {
+        color: #3dd6f3;
+    }
+    .arch-core {
+        border-color: rgba(45, 200, 235, 0.32);
+        background: rgba(45, 200, 235, 0.05);
+        box-shadow: 0 0 40px -12px rgba(45, 200, 235, 0.35);
+        text-align: center;
+    }
+    .arch-mvc {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+    }
+    .arch-cell {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        background: rgba(255, 255, 255, 0.02);
+        border-radius: 11px;
+        padding: 16px 10px;
+    }
+    .arch-cell svg {
+        width: 22px;
+        height: 22px;
+        margin-bottom: 4px;
+    }
+    .arch-cell b {
+        font-family: "Inter", sans-serif;
+        font-size: 14.5px;
+        color: #e7e9ee;
+    }
+    .arch-cell span {
+        font-size: 11.5px;
+        color: #8b93a1;
+    }
+    .arch-core-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+    }
+    .arch-chip {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 13px;
+        color: #3dd6f3;
+        background: rgba(45, 200, 235, 0.1);
+        border: 1px solid rgba(45, 200, 235, 0.28);
+        border-radius: 9px;
+        padding: 8px 16px;
+    }
+    .arch-rarrow {
+        width: 30px;
+        height: 22px;
+        flex-shrink: 0;
+    }
+    .arch-note {
+        margin: 12px 0 0;
+        font-size: 13px;
+        color: #9098a6;
+    }
+    .arch-conn {
+        display: grid;
+        place-items: center;
+        height: 30px;
+    }
+    .arch-conn svg {
+        width: 22px;
+        height: 30px;
+        opacity: 0.7;
+    }
+    .arch-pkgs {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+    }
+    .arch-pkg {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        background: rgba(255, 255, 255, 0.02);
+        border-radius: 10px;
+        padding: 12px;
+    }
+    .arch-pkg b {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12px;
+        color: #7dd3fc;
+        font-weight: 500;
+    }
+    .arch-pkg span {
+        font-size: 11px;
+        color: #6b7280;
+    }
+
     /* modules */
     .mod-card {
         border: 1px solid rgba(255, 255, 255, 0.08);
@@ -1235,6 +1535,16 @@ git clone <span class="c-blue">.../nmrp-rpc nmrp-locale</span>
     @media (max-width: 560px) {
         .grid-4 {
             grid-template-columns: 1fr;
+        }
+        .arch-pkgs {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .arch-core-row {
+            flex-direction: column;
+            gap: 10px;
+        }
+        .arch-rarrow {
+            transform: rotate(90deg);
         }
     }
 </style>
