@@ -1,6 +1,7 @@
 ---
 import Base from './Base.astro';
 import { docsNav, docsUi } from '../data/docs-nav.js';
+import { SITE_URL } from '../data/site.js';
 
 interface Heading { depth: number; slug: string; text: string; }
 interface Props {
@@ -18,12 +19,15 @@ const nav = docsNav[lang];
 
 const base = import.meta.env.BASE_URL;              // "/"
 const clean = base.replace(/\/$/, '');              // ""
-const docsBase = isEn ? `${clean}/en/docs` : `${clean}/docs`;
-const homeHref = isEn ? `${clean}/en` : (base || '/');
+// The docs are served at the domain root (docs.nmrp.dev/introduction …).
+const docsBase = isEn ? `${clean}/en` : clean;
+// "Home" jumps back to the marketing site (nmrp.dev) — cross-domain in production.
+const homeHref = isEn ? `${SITE_URL}/en` : (SITE_URL || '/');
 const href = (s: string) => `${docsBase}/${s}`;
 
-// Language switch keeps you on the same page.
-const otherHref = isEn ? `${clean}/docs/${slug}` : `${clean}/en/docs/${slug}`;
+// Language switch keeps you on the same page (both stay on the docs host).
+const frDocHref = `${clean}/${slug}`;
+const enDocHref = `${clean}/en/${slug}`;
 
 // Flatten the nav for prev / next.
 const flat = nav.flatMap((g) => g.items);
@@ -52,8 +56,8 @@ const pageTitle = `${title} — NoMoreRP Docs`;
         <div class="dnav-right">
           <a href={homeHref} class="dnav-lnk">{ui.backToSite}</a>
           <div class="lang-toggle">
-            <a href={isEn ? otherHref : `${clean}/en/docs/${slug}`} class="lang-btn" style={`background:${isEn ? 'transparent' : '#3dd6f3'};color:${isEn ? '#9098a6' : '#08090c'};`}>FR</a>
-            <a href={isEn ? `${clean}/docs/${slug}` : otherHref} class="lang-btn" style={`background:${isEn ? '#3dd6f3' : 'transparent'};color:${isEn ? '#08090c' : '#9098a6'};`}>EN</a>
+            <a href={frDocHref} class="lang-btn" style={`background:${isEn ? 'transparent' : '#3dd6f3'};color:${isEn ? '#9098a6' : '#08090c'};`}>FR</a>
+            <a href={enDocHref} class="lang-btn" style={`background:${isEn ? '#3dd6f3' : 'transparent'};color:${isEn ? '#08090c' : '#9098a6'};`}>EN</a>
           </div>
           <a href="https://github.com/No-More-RP" target="_blank" rel="noopener" class="icon-lnk" aria-label="GitHub">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.2.8-.5v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.8 18.3 5 18.3 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.6.8.5 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>

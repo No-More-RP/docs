@@ -5,7 +5,7 @@ description: Un add-on de besoins vitaux pour NMRP qui ajoute des jauges de surv
 
 # nmrp-character-needs
 
-Un add-on de besoins vitaux pour [NMRP](/docs/nmrp) qui ajoute des jauges de survie au HUD via le SDK d'add-ons de NMRP. Il embarque la **stamina** dès aujourd'hui, avec la faim, la soif et l'alcool prévus par la suite.
+Un add-on de besoins vitaux pour [NMRP](/nmrp) qui ajoute des jauges de survie au HUD via le SDK d'add-ons de NMRP. Il embarque la **stamina** dès aujourd'hui, avec la faim, la soif et l'alcool prévus par la suite.
 
 ## Ce que c'est
 
@@ -43,7 +43,7 @@ C'est un package **script**, pas un game-mode. Il tourne par-dessus le game-mode
 
 4. Démarre (ou redémarre) le serveur. L'add-on se charge après le core NMRP et s'enregistre tout seul.
 
-> L'erreur la plus fréquente est de mettre ce package dans `game_mode`. C'est un add-on : garde `game_mode = "nmrp"` et ajoute `nmrp-character-needs` à la liste `packages`. Consulte [Installation](/docs/installation) pour la mise en place complète du serveur.
+> L'erreur la plus fréquente est de mettre ce package dans `game_mode`. C'est un add-on : garde `game_mode = "nmrp"` et ajoute `nmrp-character-needs` à la liste `packages`. Consulte [Installation](/installation) pour la mise en place complète du serveur.
 
 ## Comment ça marche
 
@@ -94,8 +94,8 @@ L'add-on suit les conventions de NMRP : commentaires en anglais uniquement, inst
 
 ## See also
 
-- [nmrp](/docs/nmrp) — le game-mode core sur lequel cet add-on se branche.
-- [Installation](/docs/installation) — mise en place complète du serveur et des packages.
+- [nmrp](/nmrp) — le game-mode core sur lequel cet add-on se branche.
+- [Installation](/installation) — mise en place complète du serveur et des packages.
 - [nmrp-character-needs sur GitHub](https://github.com/No-More-RP/nmrp)
 
 MIT © 2026 JustGod.

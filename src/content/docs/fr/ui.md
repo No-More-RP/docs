@@ -105,7 +105,7 @@ Garde `events.ts` et `Client/app.lua` synchronisés : ce couple est la **source 
 
 ## See also
 
-- [Introduction à NoMoreRP](/docs/nmrp)
-- [Localisation (nmrp-locale)](/docs/locale)
+- [Introduction à NoMoreRP](/nmrp)
+- [Localisation (nmrp-locale)](/locale)
 
 MIT © 2026 JustGodWork.

@@ -96,6 +96,6 @@ cd Server/vendor/norm && lua build.lua   # regenerates dist/norm.lua + dist/norm
 
 - [Norm documentation site](https://justgodwork.github.io/norm-docs/) — the full ORM API.
 - [`Server/vendor/norm/README.md`](https://github.com/No-More-RP/nmrp-norm/blob/main/Server/vendor/norm/README.md) — the core README.
-- [nmrp-promise](/en/docs/promise) — the optional promise provider Norm integrates with.
+- [nmrp-promise](/en/promise) — the optional promise provider Norm integrates with.
 
 MIT © 2026 JustGodWork. Vendored submodules keep their own licenses.

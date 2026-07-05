@@ -24,14 +24,14 @@ The stack is layered from low-level primitives up to the gamemode itself:
 
 | Package | Layer | Role |
 |---|---|---|
-| [`nmrp-promise`](/en/docs/promise) | async | JS-grade promises for Lua — `async` / `await`, combinators. |
-| [`nmrp-norm`](/en/docs/norm) | database | Server-side ORM (Norm) — models, relations, migrations. |
-| [`nmrp-rpc`](/en/docs/rpc) | networking | Promise-based request/reply RPC across server and client. |
-| [`nmrp-locale`](/en/docs/locale) | i18n | Shared localization for Lua **and** WebUI. |
-| [`nmrp`](/en/docs/nmrp) | game mode | The MVC base that ties it all together. |
-| [`nmrp-character-needs`](/en/docs/character-needs) | add-on | Survival gauges (stamina today) on top of the core. |
-| [`nmrp-ui`](/en/docs/ui) | UI | The HUD + inventory WebUI, built with Svelte. |
-| [`light-class`](/en/docs/light-class) | utility | The tiny OOP library everything else is built on. |
+| [`nmrp-promise`](/en/promise) | async | JS-grade promises for Lua — `async` / `await`, combinators. |
+| [`nmrp-norm`](/en/norm) | database | Server-side ORM (Norm) — models, relations, migrations. |
+| [`nmrp-rpc`](/en/rpc) | networking | Promise-based request/reply RPC across server and client. |
+| [`nmrp-locale`](/en/locale) | i18n | Shared localization for Lua **and** WebUI. |
+| [`nmrp`](/en/nmrp) | game mode | The MVC base that ties it all together. |
+| [`nmrp-character-needs`](/en/character-needs) | add-on | Survival gauges (stamina today) on top of the core. |
+| [`nmrp-ui`](/en/ui) | UI | The HUD + inventory WebUI, built with Svelte. |
+| [`light-class`](/en/light-class) | utility | The tiny OOP library everything else is built on. |
 
 ## Architecture at a glance
 
@@ -41,12 +41,12 @@ The gamemode splits every file into one of three **realms**:
 - **`Client/`** — UI (WebUI / Svelte), input, rendering.
 - **`Shared/`** — code loaded into **both** VMs (libraries, classes, helpers, globals).
 
-On the server, features are organized as **MVC modules** wired by dependency injection: a model defines the data, a service holds the logic, and a controller connects it to the engine. The [nmrp](/en/docs/nmrp) page covers this in full.
+On the server, features are organized as **MVC modules** wired by dependency injection: a model defines the data, a service holds the logic, and a controller connects it to the engine. The [nmrp](/en/nmrp) page covers this in full.
 
 ## Where to go next
 
-- **New here?** Start with [Installation](/en/docs/installation) to get a server running.
-- **Just want a library?** Each package page is self-contained — jump straight to [nmrp-promise](/en/docs/promise), [nmrp-rpc](/en/docs/rpc), [nmrp-norm](/en/docs/norm) or [nmrp-locale](/en/docs/locale).
-- **Building a full gamemode?** Read [nmrp](/en/docs/nmrp) for the MVC + DI model.
+- **New here?** Start with [Installation](/en/installation) to get a server running.
+- **Just want a library?** Each package page is self-contained — jump straight to [nmrp-promise](/en/promise), [nmrp-rpc](/en/rpc), [nmrp-norm](/en/norm) or [nmrp-locale](/en/locale).
+- **Building a full gamemode?** Read [nmrp](/en/nmrp) for the MVC + DI model.
 
 > Every package is MIT-licensed and lives on GitHub under the [No-More-RP](https://github.com/No-More-RP) organization. Contributions are welcome.

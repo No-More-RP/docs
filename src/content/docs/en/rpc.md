@@ -9,7 +9,7 @@ Turn nanos world's fire-and-forget events into a Promise-based request/reply RPC
 
 ## What it is
 
-`nmrp-rpc` is a nanos world package that layers a **request/reply** model on top of the engine's one-way events. Instead of manually pairing a `Call` with a matching reply event and tracking request ids by hand, you register a named handler with `Subscribe` and invoke it with `Call`. The result — or the error — comes back as a [`Promise`](/en/docs/promise) you can `:Await()` or `:Then(...)`.
+`nmrp-rpc` is a nanos world package that layers a **request/reply** model on top of the engine's one-way events. Instead of manually pairing a `Call` with a matching reply event and tracking request ids by hand, you register a named handler with `Subscribe` and invoke it with `Call`. The result — or the error — comes back as a [`Promise`](/en/promise) you can `:Await()` or `:Then(...)`.
 
 It works **server-side and client-side**, **local and remote**, with automatic error propagation: an error thrown inside a handler rejects the caller's promise.
 
@@ -17,7 +17,7 @@ The global `RPCEvents` is available everywhere, thanks to the shared Lua state b
 
 ## Installation
 
-Add `nmrp-rpc` to your package's `packages_requirements`. It depends on [`nmrp-promise`](/en/docs/promise), so declare that one too:
+Add `nmrp-rpc` to your package's `packages_requirements`. It depends on [`nmrp-promise`](/en/promise), so declare that one too:
 
 ```toml
 [script] # or [game_mode]
@@ -105,7 +105,7 @@ RPCEvents.CallAsync("risky"):Catch(function(err) print("failed:", err); end);
 
 ## See also
 
-- [nmrp-promise](/en/docs/promise) — the promise library `nmrp-rpc` is built on.
+- [nmrp-promise](/en/promise) — the promise library `nmrp-rpc` is built on.
 - [nmrp-rpc on GitHub](https://github.com/No-More-RP/nmrp-rpc)
 
 MIT © 2026 JustGodWork.

@@ -19,10 +19,10 @@ It stands on the [No More RP](https://github.com/No-More-RP) package ecosystem:
 
 | Package | Role |
 |---|---|
-| [`nmrp-promise`](/en/docs/promise) | JS-grade promises (`async`/`await`, combinators). |
-| [`nmrp-norm`](/en/docs/norm) | Server-side ORM (Norm): models, relations, migrations. |
-| [`nmrp-rpc`](/en/docs/rpc) | Promise-based RPC across server and client. |
-| [`nmrp-locale`](/en/docs/locale) | Shared localization (i18n) for Lua + WebUI. |
+| [`nmrp-promise`](/en/promise) | JS-grade promises (`async`/`await`, combinators). |
+| [`nmrp-norm`](/en/norm) | Server-side ORM (Norm): models, relations, migrations. |
+| [`nmrp-rpc`](/en/rpc) | Promise-based RPC across server and client. |
+| [`nmrp-locale`](/en/locale) | Shared localization (i18n) for Lua + WebUI. |
 
 The client UI is built with **Svelte + WebUI**.
 
@@ -42,7 +42,7 @@ The client UI is built with **Svelte + WebUI**.
 
 Make sure those packages exist in your server's `Packages/` folder, select `nmrp` as the active game mode, then start the server. The database connection is configured through the game-mode custom setting `database_connection` (new-game menu, `Config.toml`, or the server command line).
 
-> **Full setup.** This is only the short version. For prerequisites, cloning the packages (with submodules), configuring the database and adding add-ons, follow the complete [Installation](/en/docs/installation) page.
+> **Full setup.** This is only the short version. For prerequisites, cloning the packages (with submodules), configuring the database and adding add-ons, follow the complete [Installation](/en/installation) page.
 
 ## Architecture
 
@@ -118,15 +118,15 @@ All new code follows the same conventions:
 - `<const>` on every non-reassigned local.
 - Parenthesized conditions.
 - Full LuaCATS annotations, and an example on every public function.
-- No user-facing string is hardcoded — everything goes through [`nmrp-locale`](/en/docs/locale).
+- No user-facing string is hardcoded — everything goes through [`nmrp-locale`](/en/locale).
 
 ## See also
 
-- [Installation](/en/docs/installation) — full server setup, from an empty `Packages/` folder to a live gamemode.
-- [nmrp-promise](/en/docs/promise) — the promise primitives every async path builds on.
-- [nmrp-norm](/en/docs/norm) — the ORM behind the Model layer.
-- [nmrp-rpc](/en/docs/rpc) — server↔client request/reply used by controllers.
-- [nmrp-locale](/en/docs/locale) — localization for Lua + WebUI.
-- [nmrp-character-needs](/en/docs/character-needs) — a reference add-on that extends the core.
+- [Installation](/en/installation) — full server setup, from an empty `Packages/` folder to a live gamemode.
+- [nmrp-promise](/en/promise) — the promise primitives every async path builds on.
+- [nmrp-norm](/en/norm) — the ORM behind the Model layer.
+- [nmrp-rpc](/en/rpc) — server↔client request/reply used by controllers.
+- [nmrp-locale](/en/locale) — localization for Lua + WebUI.
+- [nmrp-character-needs](/en/character-needs) — a reference add-on that extends the core.
 
 MIT © 2026 JustGod.

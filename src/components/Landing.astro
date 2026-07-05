@@ -1,5 +1,6 @@
 ---
 import { dict } from '../data/i18n.js';
+import { DOCS_URL } from '../data/site.js';
 
 interface Props { lang?: 'fr' | 'en'; }
 const { lang = 'fr' } = Astro.props;
@@ -10,9 +11,8 @@ const isEn = lang === 'en';
 const frHref = import.meta.env.BASE_URL;                       // "/"
 const enHref = import.meta.env.BASE_URL.replace(/\/$/, '') + '/en';
 
-// Documentation entry point for the active language.
-const clean = import.meta.env.BASE_URL.replace(/\/$/, '');
-const docsHref = isEn ? `${clean}/en/docs/introduction` : `${clean}/docs/introduction`;
+// Documentation lives on its own host (docs.nmrp.dev) — cross-domain in production.
+const docsHref = isEn ? `${DOCS_URL}/en/introduction` : `${DOCS_URL}/introduction`;
 ---
 
 <div class="page">

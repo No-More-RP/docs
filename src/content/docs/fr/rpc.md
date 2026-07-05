@@ -9,7 +9,7 @@ Transforme les events "tire-et-oublie" de nanos world en un RPC requête/répons
 
 ## C'est quoi
 
-`nmrp-rpc` est un package nanos world qui ajoute un modèle **requête/réponse** par-dessus les events à sens unique du moteur. Au lieu d'apparier manuellement un `Call` avec son event de réponse et de suivre les ids de requête à la main, tu enregistres un handler nommé avec `Subscribe` et tu l'invoques avec `Call`. Le résultat — ou l'erreur — revient sous forme de [`Promise`](/docs/promise) que tu peux `:Await()` ou `:Then(...)`.
+`nmrp-rpc` est un package nanos world qui ajoute un modèle **requête/réponse** par-dessus les events à sens unique du moteur. Au lieu d'apparier manuellement un `Call` avec son event de réponse et de suivre les ids de requête à la main, tu enregistres un handler nommé avec `Subscribe` et tu l'invoques avec `Call`. Le résultat — ou l'erreur — revient sous forme de [`Promise`](/promise) que tu peux `:Await()` ou `:Then(...)`.
 
 Ça fonctionne **côté serveur et côté client**, **en local et à distance**, avec propagation automatique des erreurs : une erreur levée dans un handler rejette la promesse de l'appelant.
 
@@ -17,7 +17,7 @@ Le global `RPCEvents` est disponible partout, grâce à l'état Lua partagé ent
 
 ## Installation
 
-Ajoute `nmrp-rpc` aux `packages_requirements` de ton package. Il dépend de [`nmrp-promise`](/docs/promise), déclare-le donc aussi :
+Ajoute `nmrp-rpc` aux `packages_requirements` de ton package. Il dépend de [`nmrp-promise`](/promise), déclare-le donc aussi :
 
 ```toml
 [script] # or [game_mode]
@@ -105,7 +105,7 @@ RPCEvents.CallAsync("risky"):Catch(function(err) print("failed:", err); end);
 
 ## Voir aussi
 
-- [nmrp-promise](/docs/promise) — la librairie de promesses sur laquelle repose `nmrp-rpc`.
+- [nmrp-promise](/promise) — la librairie de promesses sur laquelle repose `nmrp-rpc`.
 - [nmrp-rpc sur GitHub](https://github.com/No-More-RP/nmrp-rpc)
 
 MIT © 2026 JustGodWork.

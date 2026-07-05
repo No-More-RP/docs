@@ -54,7 +54,7 @@ Dans le `Config.toml` de ton serveur, définis `nmrp` comme game-mode actif :
     ]
 ```
 
-> **Game-mode vs. package.** `nmrp` est un package de type *game-mode*, il va donc dans `game_mode`. Les add-ons comme [`nmrp-character-needs`](/docs/character-needs) sont des packages de type *script* — ils vont dans la liste `packages`, jamais dans `game_mode`.
+> **Game-mode vs. package.** `nmrp` est un package de type *game-mode*, il va donc dans `game_mode`. Les add-ons comme [`nmrp-character-needs`](/character-needs) sont des packages de type *script* — ils vont dans la liste `packages`, jamais dans `game_mode`.
 
 ## 3. Configurer la base de données
 
@@ -78,7 +78,7 @@ Démarre (ou redémarre) le serveur. Au boot, le loader construit la connexion b
 
 ## Ajouter un add-on
 
-Les add-ons étendent le core sans y toucher. Pour en installer un — par exemple [`nmrp-character-needs`](/docs/character-needs) :
+Les add-ons étendent le core sans y toucher. Pour en installer un — par exemple [`nmrp-character-needs`](/character-needs) :
 
 1. Clone-le dans `Packages/`, à côté du core.
 2. Ajoute-le à la liste **`packages`** (pas `game_mode`) dans `Config.toml`.
@@ -86,5 +86,5 @@ Les add-ons étendent le core sans y toucher. Pour en installer un — par exemp
 
 ## Ensuite
 
-- Comprendre l'architecture que tu viens de lancer → [nmrp](/docs/nmrp).
-- Explorer les librairies sur lesquelles elle repose → [nmrp-promise](/docs/promise), [nmrp-rpc](/docs/rpc), [nmrp-norm](/docs/norm), [nmrp-locale](/docs/locale).
+- Comprendre l'architecture que tu viens de lancer → [nmrp](/nmrp).
+- Explorer les librairies sur lesquelles elle repose → [nmrp-promise](/promise), [nmrp-rpc](/rpc), [nmrp-norm](/norm), [nmrp-locale](/locale).

@@ -5,7 +5,7 @@ description: A character-needs add-on for NMRP that adds survival gauges to the 
 
 # nmrp-character-needs
 
-A character-needs add-on for [NMRP](/en/docs/nmrp) that adds survival gauges to the HUD through the NMRP addon SDK. It ships **stamina** today, with hunger, thirst and alcohol on the roadmap.
+A character-needs add-on for [NMRP](/en/nmrp) that adds survival gauges to the HUD through the NMRP addon SDK. It ships **stamina** today, with hunger, thirst and alcohol on the roadmap.
 
 ## What it is
 
@@ -43,7 +43,7 @@ This is a **script** package, not a game-mode. It runs on top of the `nmrp` game
 
 4. Start (or restart) the server. The add-on loads after the NMRP core and registers itself.
 
-> The single most common mistake is putting this package in `game_mode`. It is an add-on: keep `game_mode = "nmrp"` and add `nmrp-character-needs` to the `packages` list. See [Installation](/en/docs/installation) for the full server setup.
+> The single most common mistake is putting this package in `game_mode`. It is an add-on: keep `game_mode = "nmrp"` and add `nmrp-character-needs` to the `packages` list. See [Installation](/en/installation) for the full server setup.
 
 ## How it works
 
@@ -94,8 +94,8 @@ The add-on follows the NMRP conventions: English-only comments, `;`-terminated s
 
 ## See also
 
-- [nmrp](/en/docs/nmrp) — the core game-mode this add-on plugs into.
-- [Installation](/en/docs/installation) — full server and package setup.
+- [nmrp](/en/nmrp) — the core game-mode this add-on plugs into.
+- [Installation](/en/installation) — full server and package setup.
 - [nmrp-character-needs on GitHub](https://github.com/No-More-RP/nmrp)
 
 MIT © 2026 JustGod.

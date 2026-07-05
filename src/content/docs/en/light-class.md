@@ -19,7 +19,7 @@ A lightweight, single-file object-oriented programming (OOP) library for Lua.
 
 Copy the `light-class.lua` file into your project directory and require it.
 
-You usually don't need to do this yourself: light-class is vendored and embedded directly into the [`nmrp-norm`](/en/docs/norm) bundle, so it ships with the package.
+You usually don't need to do this yourself: light-class is vendored and embedded directly into the [`nmrp-norm`](/en/norm) bundle, so it ships with the package.
 
 ## Usage
 
@@ -86,6 +86,6 @@ Overridden methods (like `speak`) replace the parent version, while any method n
 
 ## See also
 
-- [nmrp-norm](/en/docs/norm) — the ORM package that vendors and embeds light-class.
+- [nmrp-norm](/en/norm) — the ORM package that vendors and embeds light-class.
 
 MIT License.

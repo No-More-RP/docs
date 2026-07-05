@@ -105,7 +105,7 @@ Keep `events.ts` and `Client/app.lua` in sync: that pair is the **source of trut
 
 ## See also
 
-- [Introduction to NoMoreRP](/en/docs/nmrp)
-- [Localization (nmrp-locale)](/en/docs/locale)
+- [Introduction to NoMoreRP](/en/nmrp)
+- [Localization (nmrp-locale)](/en/locale)
 
 MIT © 2026 JustGodWork.

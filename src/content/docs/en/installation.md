@@ -54,7 +54,7 @@ In your server's `Config.toml`, set `nmrp` as the active game mode:
     ]
 ```
 
-> **Game modes vs. packages.** `nmrp` is a *game-mode* package, so it goes in `game_mode`. Add-ons like [`nmrp-character-needs`](/en/docs/character-needs) are *script* packages — they go in the `packages` list instead, never in `game_mode`.
+> **Game modes vs. packages.** `nmrp` is a *game-mode* package, so it goes in `game_mode`. Add-ons like [`nmrp-character-needs`](/en/character-needs) are *script* packages — they go in the `packages` list instead, never in `game_mode`.
 
 ## 3. Configure the database
 
@@ -78,7 +78,7 @@ Start (or restart) the server. On boot the loader builds the database connection
 
 ## Add an add-on
 
-Add-ons extend the core without touching it. To install one — for example [`nmrp-character-needs`](/en/docs/character-needs):
+Add-ons extend the core without touching it. To install one — for example [`nmrp-character-needs`](/en/character-needs):
 
 1. Clone it into `Packages/` alongside the core.
 2. Add it to the **`packages`** list (not `game_mode`) in `Config.toml`.
@@ -86,5 +86,5 @@ Add-ons extend the core without touching it. To install one — for example [`nm
 
 ## Next
 
-- Understand the architecture you just launched → [nmrp](/en/docs/nmrp).
-- Explore the libraries it stands on → [nmrp-promise](/en/docs/promise), [nmrp-rpc](/en/docs/rpc), [nmrp-norm](/en/docs/norm), [nmrp-locale](/en/docs/locale).
+- Understand the architecture you just launched → [nmrp](/en/nmrp).
+- Explore the libraries it stands on → [nmrp-promise](/en/promise), [nmrp-rpc](/en/rpc), [nmrp-norm](/en/norm), [nmrp-locale](/en/locale).

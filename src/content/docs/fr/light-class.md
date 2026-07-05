@@ -19,7 +19,7 @@ Une bibliothèque de programmation orientée objet (OOP) légère et mono-fichie
 
 Copie le fichier `light-class.lua` dans ton projet, puis fais un `require` dessus.
 
-En général tu n'as pas besoin de le faire toi-même : light-class est embarquée et intégrée directement dans le bundle [`nmrp-norm`](/docs/norm), donc elle est livrée avec le package.
+En général tu n'as pas besoin de le faire toi-même : light-class est embarquée et intégrée directement dans le bundle [`nmrp-norm`](/norm), donc elle est livrée avec le package.
 
 ## Utilisation
 
@@ -86,6 +86,6 @@ Les méthodes surchargées (comme `speak`) remplacent la version du parent, tand
 
 ## Voir aussi
 
-- [nmrp-norm](/docs/norm) — le package ORM qui embarque et intègre light-class.
+- [nmrp-norm](/norm) — le package ORM qui embarque et intègre light-class.
 
 MIT License.

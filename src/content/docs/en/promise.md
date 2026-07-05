@@ -125,7 +125,7 @@ The instance metatable carries `__name == "Promise"`, and a generic thenable-ado
 
 ## See also
 
-- [nmrp-rpc](/en/docs/rpc) — promise-based request/reply RPC across server and client.
-- [nmrp-norm](/en/docs/norm) — server-side ORM whose queries return nmrp-promise instances.
+- [nmrp-rpc](/en/rpc) — promise-based request/reply RPC across server and client.
+- [nmrp-norm](/en/norm) — server-side ORM whose queries return nmrp-promise instances.
 
 MIT © 2026 JustGodWork.

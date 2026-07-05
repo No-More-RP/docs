@@ -246,7 +246,7 @@ print(L:t("msg", { count = 3 })); -- "You have 3 message(s)"  from "You have {co
 
 ## See also
 
-- [nmrp-ui](/en/docs/ui) — the WebUI you attach the locale store to.
+- [nmrp-ui](/en/ui) — the WebUI you attach the locale store to.
 - [nmrp-locale on GitHub](https://github.com/No-More-RP/nmrp-locale)
 
 MIT © 2026 JustGodWork.

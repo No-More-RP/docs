@@ -125,7 +125,7 @@ La métatable d'instance porte `__name == "Promise"`, et une couche générique 
 
 ## Voir aussi
 
-- [nmrp-rpc](/docs/rpc) — RPC requête / réponse basé sur les promesses, entre serveur et client.
-- [nmrp-norm](/docs/norm) — ORM côté serveur dont les requêtes renvoient des instances nmrp-promise.
+- [nmrp-rpc](/rpc) — RPC requête / réponse basé sur les promesses, entre serveur et client.
+- [nmrp-norm](/norm) — ORM côté serveur dont les requêtes renvoient des instances nmrp-promise.
 
 MIT © 2026 JustGodWork.
