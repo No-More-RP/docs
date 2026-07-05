@@ -1,0 +1,379 @@
+---
+import { dict } from '../data/i18n.js';
+
+interface Props { lang?: 'fr' | 'en'; }
+const { lang = 'fr' } = Astro.props;
+const t = dict[lang];
+const isEn = lang === 'en';
+
+// Language-switch targets (one static route per language)
+const frHref = import.meta.env.BASE_URL;                       // "/"
+const enHref = import.meta.env.BASE_URL.replace(/\/$/, '') + '/en';
+
+// Documentation entry point for the active language.
+const clean = import.meta.env.BASE_URL.replace(/\/$/, '');
+const docsHref = isEn ? `${clean}/en/docs/introduction` : `${clean}/docs/introduction`;
+---
+
+<div class="page">
+  <!-- ambient glow -->
+  <div class="glow"></div>
+
+  <!-- NAV -->
+  <header class="nav">
+    <div class="nav-inner">
+      <a href="#top" class="brand">
+        <img src={`${import.meta.env.BASE_URL}nmrp_full_512.png`} alt="NoMoreRP" class="brand-logo" />
+        <span class="brand-name">NoMore<span class="accent">RP</span></span>
+      </a>
+      <nav class="nav-links">
+        <a href="#features" class="nav-lnk">{t.nav_features}</a>
+        <a href="#api" class="nav-lnk">{t.nav_api}</a>
+        <a href="#modules" class="nav-lnk">{t.nav_modules}</a>
+        <a href="#install" class="nav-lnk">{t.nav_install}</a>
+        <a href={docsHref} class="nav-lnk">{t.nav_docs}</a>
+      </nav>
+      <div class="nav-right">
+        <div class="lang-toggle">
+          <a href={enHref} class="lang-btn" style={`background:${isEn ? '#3dd6f3' : 'transparent'};color:${isEn ? '#08090c' : '#9098a6'};`}>EN</a>
+          <a href={frHref} class="lang-btn" style={`background:${isEn ? 'transparent' : '#3dd6f3'};color:${isEn ? '#9098a6' : '#08090c'};`}>FR</a>
+        </div>
+        <a href="https://github.com/No-More-RP" target="_blank" rel="noopener" class="icon-lnk">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.2.8-.5v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.8 18.3 5 18.3 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.6.8.5 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
+          GitHub
+        </a>
+        <a href="https://github.com/No-More-RP" target="_blank" rel="noopener" class="btn-cyan btn-sm">{t.nav_cta}</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section id="top" class="hero">
+    <div class="hero-copy">
+      <div class="badge">
+        <span class="badge-dot"></span>
+        {t.hero_badge}
+      </div>
+      <h1 class="hero-title">{t.hero_title_a} <span class="accent">{t.hero_title_b}</span></h1>
+      <p class="hero-sub">{t.hero_sub}</p>
+      <div class="hero-cta">
+        <a href="https://github.com/No-More-RP/nmrp" target="_blank" rel="noopener" class="btn-cyan btn-lg">
+          {t.hero_cta1}
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a href={docsHref} class="btn-ghost">{t.hero_cta2}</a>
+      </div>
+      <div class="stats">
+        {t.stats.map((s) => (
+          <div>
+            <div class="stat-value">{s.value}</div>
+            <div class="stat-label">{s.label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Terminal window -->
+    <div class="term-float">
+      <div class="term">
+        <div class="term-bar">
+          <span class="dot" style="background:#ff5f57;"></span>
+          <span class="dot" style="background:#febc2e;"></span>
+          <span class="dot" style="background:#28c840;"></span>
+          <span class="term-title">nanos-world-server — Packages</span>
+        </div>
+        <pre class="term-body"><span class="c-dim"># {t.term_comment}</span>
+Packages/
+  <span class="c-blue">nmrp/</span>            <span class="c-dim">MVC gamemode base</span>
+  <span class="c-blue">nmrp-rpc/</span>        <span class="c-dim">typed RPC layer</span>
+  <span class="c-blue">nmrp-norm/</span>       <span class="c-dim">Norm ORM</span>
+  <span class="c-blue">nmrp-promise/</span>    <span class="c-dim">async / promises</span>
+
+<span class="c-dim"># nmrp/Package.toml</span>
+<span class="c-purple">name</span>     = <span class="c-cyan">"nmrp"</span>
+<span class="c-purple">title</span>    = <span class="c-cyan">"NoMoreRP"</span>
+<span class="c-purple">type</span>     = <span class="c-cyan">"game-mode"</span>
+
+<span class="c-accent">▶</span> {t.term_ready} <span class="cursor">▋</span></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- trust strip -->
+  <div class="trust-wrap">
+    <p class="trust-label">{t.trust}</p>
+    <div class="trust-logos">
+      <span>MIT</span><span>Lua&nbsp;+&nbsp;TypeScript</span><span>Async&nbsp;MySQL</span><span>nanos-world</span><span>Hot&nbsp;reload</span>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <section id="features" class="section">
+    <div class="section-head">
+      <p class="eyebrow">{t.feat_eyebrow}</p>
+      <h2 class="h2">{t.feat_title}</h2>
+      <p class="lead">{t.feat_sub}</p>
+    </div>
+    <div class="grid-4">
+      {t.features.map((f) => (
+        <div class="feat-card">
+          <div class="feat-icon">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#3dd6f3" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d={f.d} /></svg>
+          </div>
+          <h3 class="feat-title">{f.title}</h3>
+          <p class="feat-desc">{f.desc}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- API / CODE -->
+  <section id="api" class="section">
+    <div class="api-grid">
+      <div>
+        <p class="eyebrow">{t.api_eyebrow}</p>
+        <h2 class="h2 h2-left">{t.api_title}</h2>
+        <p class="lead lead-left">{t.api_sub}</p>
+        <ul class="api-points">
+          {t.api_points.map((p) => (
+            <li>
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#3dd6f3" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+              {p}
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div class="code">
+        <div class="code-tabs">
+          <span class="tab tab-active">PlayerController.lua</span>
+          <span class="tab">Character.lua</span>
+        </div>
+        <pre class="code-body"><span class="c-dim">-- {t.code_comment}</span>
+<span class="c-purple">local</span> Controller = <span class="c-blue">Registry</span>:<span class="c-blue">get</span>(<span class="c-cyan">"PlayerController"</span>)
+
+<span class="c-purple">function</span> Controller:<span class="c-blue">OnReady</span>(player)
+  <span class="c-dim">-- Norm ORM: load or create the character</span>
+  <span class="c-purple">local</span> char = Character
+    :<span class="c-blue">where</span>(<span class="c-cyan">"steam_id"</span>, player:<span class="c-blue">GetSteamID</span>())
+    :<span class="c-blue">firstOrCreate</span>():<span class="c-blue">await</span>()
+
+  <span class="c-dim">-- typed RPC back to the client</span>
+  RPC.<span class="c-blue">CallRemote</span>(<span class="c-cyan">"character:loaded"</span>, player, char:<span class="c-blue">toTable</span>())
+<span class="c-purple">end</span></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODULES -->
+  <section id="modules" class="section">
+    <div class="section-head">
+      <p class="eyebrow">{t.mod_eyebrow}</p>
+      <h2 class="h2">{t.mod_title}</h2>
+      <p class="lead">{t.mod_sub}</p>
+    </div>
+    <div class="grid-3">
+      {t.modules.map((m) => (
+        <div class="mod-card">
+          <div class="mod-head">
+            <span class="mod-pkg">{m.pkg}</span>
+            <span class="mod-tag">{m.tag}</span>
+          </div>
+          <p class="mod-desc">{m.desc}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- INSTALL -->
+  <section id="install" class="section section-narrow">
+    <div class="section-head">
+      <p class="eyebrow">{t.ins_eyebrow}</p>
+      <h2 class="h2">{t.ins_title}</h2>
+      <p class="lead">{t.ins_sub}</p>
+    </div>
+    <div class="grid-2">
+      {t.steps.map((st) => (
+        <div class="step-card">
+          <span class="step-n">{st.n}</span>
+          <div>
+            <h3 class="step-title">{st.title}</h3>
+            <p class="step-desc">{st.desc}</p>
+            <code class="step-cmd">{st.cmd}</code>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- COMMUNITY CTA -->
+  <section class="section cta-section">
+    <div class="cta-box">
+      <div class="cta-glow"></div>
+      <div class="cta-inner">
+        <h2 class="h2">{t.cta_title}</h2>
+        <p class="cta-sub">{t.cta_sub}</p>
+        <div class="cta-btns">
+          <a href="https://github.com/orgs/No-More-RP/discussions" target="_blank" rel="noopener" class="btn-cyan btn-lg">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            {t.cta_discord}
+          </a>
+          <a href="https://github.com/No-More-RP" target="_blank" rel="noopener" class="btn-ghost btn-lg">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.2.8-.5v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.8 18.3 5 18.3 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.6.8.5 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
+            {t.cta_github}
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src={`${import.meta.env.BASE_URL}nmrp_full_512.png`} alt="NoMoreRP" class="footer-logo" />
+        <span class="brand-name sm">NoMore<span class="accent">RP</span></span>
+        <span class="footer-note">{t.footer_note}</span>
+      </div>
+      <div class="footer-links">
+        <a href="#features" class="foot-lnk">{t.nav_features}</a>
+        <a href="#api" class="foot-lnk">{t.nav_api}</a>
+        <a href="https://github.com/orgs/No-More-RP/discussions" target="_blank" rel="noopener" class="foot-lnk">Discussions</a>
+        <a href="https://github.com/No-More-RP" target="_blank" rel="noopener" class="foot-lnk">GitHub</a>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<style>
+  .page { background:#08090c; color:#e7e9ee; font-family:'Manrope',system-ui,sans-serif; min-height:100vh; overflow-x:hidden; position:relative; }
+  .accent { color:#3dd6f3; }
+  .glow { position:absolute; top:-240px; left:50%; transform:translateX(-50%); width:1100px; height:620px; background:radial-gradient(ellipse at center, rgba(45,200,235,0.16), rgba(8,9,12,0) 68%); pointer-events:none; z-index:0; }
+
+  /* NAV */
+  .nav { position:sticky; top:0; z-index:50; backdrop-filter:blur(14px); background:rgba(8,9,12,0.72); border-bottom:1px solid rgba(255,255,255,0.07); }
+  .nav-inner { max-width:1180px; margin:0 auto; padding:16px 28px; display:flex; align-items:center; gap:28px; }
+  .brand { display:flex; align-items:center; gap:10px; text-decoration:none; color:#e7e9ee; }
+  .brand-logo { width:34px; height:34px; border-radius:9px; box-shadow:0 0 22px rgba(45,200,235,0.4); }
+  .brand-name { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:18px; letter-spacing:-0.02em; }
+  .brand-name.sm { font-size:15px; }
+  .nav-links { display:flex; gap:26px; margin-left:8px; }
+  .nav-lnk { color:#9098a6; text-decoration:none; font-size:14.5px; font-weight:500; transition:color .15s; }
+  .nav-lnk:hover { color:#e7e9ee; }
+  .nav-right { margin-left:auto; display:flex; align-items:center; gap:14px; }
+  .lang-toggle { display:flex; border:1px solid rgba(255,255,255,0.1); border-radius:8px; overflow:hidden; font-family:'JetBrains Mono',monospace; font-size:12px; }
+  .lang-btn { padding:6px 11px; text-decoration:none; line-height:1.5; }
+  .icon-lnk { display:flex; align-items:center; gap:7px; color:#9098a6; text-decoration:none; font-size:14.5px; font-weight:600; transition:color .15s; }
+  .icon-lnk:hover { color:#e7e9ee; }
+
+  /* Buttons */
+  .btn-cyan { background:#3dd6f3; color:#08090c; text-decoration:none; font-weight:700; border-radius:11px; box-shadow:0 0 22px rgba(45,200,235,0.28); display:inline-flex; align-items:center; gap:9px; transition:background .15s; }
+  .btn-cyan:hover { background:#7fe7fb; }
+  .btn-sm { font-size:14px; padding:9px 16px; border-radius:9px; }
+  .btn-lg { font-size:15px; padding:14px 24px; }
+  .btn-ghost { background:rgba(255,255,255,0.04); color:#e7e9ee; text-decoration:none; font-weight:600; font-size:15px; padding:14px 22px; border-radius:11px; border:1px solid rgba(255,255,255,0.12); display:inline-flex; align-items:center; gap:9px; transition:background .15s; }
+  .btn-ghost:hover { background:rgba(255,255,255,0.08); }
+
+  /* HERO */
+  .hero { position:relative; z-index:1; max-width:1180px; margin:0 auto; padding:84px 28px 40px; display:grid; grid-template-columns:minmax(0,1.05fr) minmax(0,1fr); gap:56px; align-items:center; }
+  .hero-copy { min-width:0; }
+  .badge { display:inline-flex; align-items:center; gap:9px; border:1px solid rgba(45,200,235,0.35); background:rgba(45,200,235,0.07); border-radius:999px; padding:6px 13px; font-family:'JetBrains Mono',monospace; font-size:12px; color:#3dd6f3; margin-bottom:26px; }
+  .badge-dot { width:7px; height:7px; border-radius:50%; background:#3dd6f3; box-shadow:0 0 10px #3dd6f3; }
+  .hero-title { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:clamp(34px,4.4vw,54px); line-height:1.05; letter-spacing:-0.03em; margin:0 0 22px; text-wrap:balance; }
+  .hero-sub { font-size:18px; line-height:1.6; color:#9098a6; margin:0 0 32px; max-width:520px; }
+  .hero-cta { display:flex; gap:14px; flex-wrap:wrap; margin-bottom:34px; }
+  .stats { display:flex; gap:30px; flex-wrap:wrap; }
+  .stat-value { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:24px; color:#e7e9ee; }
+  .stat-label { font-size:12.5px; color:#6b7280; font-family:'JetBrains Mono',monospace; letter-spacing:0.02em; }
+
+  /* Terminal */
+  .term-float { animation:nmrpFloat 7s ease-in-out infinite; min-width:0; }
+  .term { border-radius:14px; overflow:hidden; border:1px solid rgba(255,255,255,0.1); background:#0d0f14; box-shadow:0 40px 80px -30px rgba(0,0,0,0.8), 0 0 60px -20px rgba(45,200,235,0.15); }
+  .term-bar { display:flex; align-items:center; gap:8px; padding:12px 15px; border-bottom:1px solid rgba(255,255,255,0.07); background:rgba(255,255,255,0.02); }
+  .dot { width:11px; height:11px; border-radius:50%; }
+  .term-title { margin-left:8px; font-family:'JetBrains Mono',monospace; font-size:12px; color:#6b7280; }
+  .term-body { margin:0; padding:20px; font-family:'JetBrains Mono',monospace; font-size:13px; line-height:1.75; color:#cbd2dd; overflow-x:auto; }
+  .c-dim { color:#6b7280; } .c-blue { color:#7dd3fc; } .c-purple { color:#c084fc; } .c-cyan { color:#22c3ee; } .c-accent { color:#3dd6f3; }
+  .cursor { animation:nmrpBlink 1.1s step-end infinite; color:#3dd6f3; }
+
+  /* trust */
+  .trust-wrap { position:relative; z-index:1; max-width:1180px; margin:0 auto; padding:20px 28px 60px; }
+  .trust-label { text-align:center; font-family:'JetBrains Mono',monospace; font-size:12px; color:#565d6b; letter-spacing:0.08em; text-transform:uppercase; margin:0 0 20px; }
+  .trust-logos { display:flex; justify-content:center; gap:40px; flex-wrap:wrap; color:#4b515e; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:17px; }
+
+  /* sections */
+  .section { position:relative; z-index:1; max-width:1180px; margin:0 auto; padding:90px 28px 20px; }
+  #features { padding-top:40px; }
+  .section-narrow { max-width:1000px; }
+  .section-head { text-align:center; max-width:640px; margin:0 auto 48px; }
+  .eyebrow { font-family:'JetBrains Mono',monospace; font-size:13px; color:#3dd6f3; letter-spacing:0.06em; text-transform:uppercase; margin:0 0 12px; }
+  .h2 { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:38px; letter-spacing:-0.025em; margin:0 0 14px; }
+  .h2-left { font-size:36px; margin-bottom:16px; }
+  .lead { font-size:16.5px; color:#9098a6; line-height:1.6; margin:0; }
+  .lead-left { line-height:1.65; margin-bottom:24px; }
+
+  .grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+  .grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .grid-2 { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
+
+  .feat-card { border:1px solid rgba(255,255,255,0.08); background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)); border-radius:14px; padding:22px; transition:border-color .15s; }
+  .feat-card:hover { border-color:rgba(45,200,235,0.4); }
+  .feat-icon { width:42px; height:42px; border-radius:11px; background:rgba(45,200,235,0.1); border:1px solid rgba(45,200,235,0.25); display:grid; place-items:center; margin-bottom:16px; }
+  .feat-title { font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:17px; margin:0 0 8px; }
+  .feat-desc { font-size:14px; color:#8b93a1; line-height:1.55; margin:0; }
+
+  /* API */
+  .api-grid { display:grid; grid-template-columns:0.9fr 1.1fr; gap:52px; align-items:center; }
+  .api-points { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:12px; }
+  .api-points li { display:flex; gap:11px; align-items:flex-start; font-size:15px; color:#cbd2dd; }
+  .api-points svg { flex-shrink:0; margin-top:2px; }
+  .code { border-radius:14px; overflow:hidden; border:1px solid rgba(255,255,255,0.1); background:#0d0f14; box-shadow:0 30px 70px -30px rgba(0,0,0,0.7); }
+  .code-tabs { display:flex; gap:6px; padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.07); font-family:'JetBrains Mono',monospace; font-size:12.5px; }
+  .tab { padding:5px 12px; color:#6b7280; }
+  .tab-active { border-radius:7px; background:rgba(45,200,235,0.12); color:#3dd6f3; }
+  .code-body { margin:0; padding:20px; font-family:'JetBrains Mono',monospace; font-size:12.5px; line-height:1.75; color:#cbd2dd; overflow-x:auto; }
+
+  /* modules */
+  .mod-card { border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.02); border-radius:14px; padding:22px; display:flex; flex-direction:column; gap:10px; transition:border-color .15s, background .15s; }
+  .mod-card:hover { border-color:rgba(45,200,235,0.4); background:rgba(45,200,235,0.03); }
+  .mod-head { display:flex; align-items:center; justify-content:space-between; }
+  .mod-pkg { font-family:'JetBrains Mono',monospace; font-size:14px; color:#3dd6f3; }
+  .mod-tag { font-size:11px; font-family:'JetBrains Mono',monospace; color:#6b7280; border:1px solid rgba(255,255,255,0.1); border-radius:6px; padding:2px 7px; }
+  .mod-desc { font-size:14px; color:#8b93a1; line-height:1.55; margin:0; }
+
+  /* install */
+  .step-card { border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.02); border-radius:14px; padding:22px; display:flex; gap:16px; }
+  .step-n { flex-shrink:0; width:34px; height:34px; border-radius:9px; background:#3dd6f3; color:#08090c; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-weight:600; font-size:15px; }
+  .step-title { font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:16px; margin:0 0 6px; }
+  .step-desc { font-size:14px; color:#8b93a1; line-height:1.55; margin:0 0 10px; }
+  .step-cmd { display:inline-block; font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#3dd6f3; background:rgba(45,200,235,0.08); border:1px solid rgba(45,200,235,0.18); border-radius:7px; padding:5px 10px; }
+
+  /* CTA */
+  .cta-section { padding-bottom:60px; }
+  .cta-box { border-radius:22px; border:1px solid rgba(45,200,235,0.25); background:linear-gradient(135deg, rgba(45,200,235,0.1), rgba(255,255,255,0.02)); padding:54px 48px; text-align:center; position:relative; overflow:hidden; }
+  .cta-glow { position:absolute; inset:0; background:radial-gradient(ellipse at 50% 0%, rgba(45,200,235,0.16), transparent 70%); pointer-events:none; }
+  .cta-inner { position:relative; }
+  .cta-sub { font-size:17px; color:#b6bdc9; line-height:1.6; margin:0 auto 28px; max-width:520px; }
+  .cta-btns { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+
+  /* footer */
+  .footer { position:relative; z-index:1; border-top:1px solid rgba(255,255,255,0.07); }
+  .footer-inner { max-width:1180px; margin:0 auto; padding:40px 28px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px; }
+  .footer-brand { display:flex; align-items:center; gap:10px; }
+  .footer-logo { width:28px; height:28px; border-radius:7px; }
+  .footer-note { font-size:13px; color:#565d6b; margin-left:8px; }
+  .footer-links { display:flex; gap:22px; font-size:13.5px; }
+  .foot-lnk { color:#6b7280; text-decoration:none; transition:color .15s; }
+  .foot-lnk:hover { color:#3dd6f3; }
+
+  @media (max-width:960px) {
+    .hero { grid-template-columns:1fr; gap:40px; padding-top:56px; }
+    .api-grid { grid-template-columns:1fr; gap:32px; }
+    .grid-4 { grid-template-columns:repeat(2,1fr); }
+    .grid-3 { grid-template-columns:1fr; }
+    .grid-2 { grid-template-columns:1fr; }
+    .nav-links { display:none; }
+  }
+  @media (max-width:560px) {
+    .grid-4 { grid-template-columns:1fr; }
+  }
+</style>

@@ -1,0 +1,5 @@
+---
+// /en/docs → first page of the EN documentation.
+const clean = import.meta.env.BASE_URL.replace(/\/$/, '');
+return Astro.redirect(`${clean}/en/docs/introduction`);
+---
