@@ -13,7 +13,12 @@ COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 
 # Build the static site into /app/dist (also renders the OG images).
+# Optional GITHUB_TOKEN raises the GitHub API rate limit (60→5000/h) so the
+# contributors page reliably populates at build time. Pass it with
+#   docker build --build-arg GITHUB_TOKEN=xxxx .
 COPY . .
+ARG GITHUB_TOKEN=""
+ENV GITHUB_TOKEN=$GITHUB_TOKEN
 RUN pnpm run build
 
 # --- Runtime stage ---------------------------------------------------------

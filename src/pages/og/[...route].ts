@@ -14,6 +14,14 @@ const pages: Record<string, { title: string; description?: string }> = {
     title: 'NoMoreRP',
     description: 'An object-oriented MVC roleplay framework for nanos world.',
   },
+  'fr/contributors': {
+    title: 'Contributeurs',
+    description: 'Les personnes qui construisent NoMoreRP.',
+  },
+  'en/contributors': {
+    title: 'Contributors',
+    description: 'The people building NoMoreRP.',
+  },
   ...Object.fromEntries(
     entries.map((e) => [e.id.replace(/\.md$/, ''), e.data]),
   ),

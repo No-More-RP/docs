@@ -1,0 +1,152 @@
+---
+import { getContributors } from '../data/contributors.js';
+
+interface Props {
+  lang?: 'fr' | 'en';
+}
+const { lang = 'fr' } = Astro.props;
+
+const copy = {
+  fr: {
+    intro:
+      'NoMoreRP est construit par sa communauté. Merci à toutes les personnes qui contribuent au code, à la documentation et aux idées de l’écosystème.',
+    count: (n) => `${n} contributeur${n > 1 ? 's' : ''}`,
+    contributions: 'contributions',
+    empty: 'Impossible de charger les contributeurs pour le moment.',
+    seeGh: 'Voir sur GitHub',
+  },
+  en: {
+    intro:
+      'NoMoreRP is built by its community. Thanks to everyone contributing code, documentation and ideas across the ecosystem.',
+    count: (n) => `${n} contributor${n > 1 ? 's' : ''}`,
+    contributions: 'contributions',
+    empty: 'Couldn’t load contributors right now.',
+    seeGh: 'See them on GitHub',
+  },
+}[lang];
+
+const contributors = await getContributors();
+---
+
+<p class="contrib-intro">{copy.intro}</p>
+
+{
+  contributors.length > 0 ? (
+    <>
+      <p class="contrib-count">{copy.count(contributors.length)}</p>
+      <ul class="contrib-grid">
+        {contributors.map((c) => (
+          <li>
+            <a
+              href={c.url}
+              target="_blank"
+              rel="noopener"
+              class="contrib-card"
+            >
+              <img
+                src={`${c.avatar}${c.avatar.includes('?') ? '&' : '?'}s=96`}
+                alt={c.login}
+                width="46"
+                height="46"
+                loading="lazy"
+                class="contrib-av"
+              />
+              <span class="contrib-info">
+                <span class="contrib-name">{c.login}</span>
+                <span class="contrib-meta">
+                  {c.contributions} {copy.contributions}
+                </span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </>
+  ) : (
+    <p class="contrib-empty">
+      {copy.empty}{' '}
+      <a href="https://github.com/No-More-RP" target="_blank" rel="noopener">
+        {copy.seeGh}
+      </a>
+    </p>
+  )
+}
+
+<style>
+  .contrib-intro {
+    color: #b6bdc9;
+    font-size: 16px;
+    line-height: 1.6;
+    max-width: 640px;
+    margin: 0 0 24px;
+  }
+  .contrib-count {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #6b7280;
+    margin: 0 0 16px;
+  }
+  .contrib-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+  }
+  .contrib-grid li {
+    margin: 0;
+    padding: 0;
+  }
+  .contrib-card {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    text-decoration: none;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+    padding: 12px 14px;
+    transition:
+      border-color 0.15s,
+      background 0.15s,
+      transform 0.15s;
+  }
+  .contrib-card:hover {
+    border-color: rgba(45, 200, 235, 0.4);
+    background: rgba(45, 200, 235, 0.04);
+    transform: translateY(-2px);
+  }
+  .contrib-av {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin: 0;
+    background: #0d0f14;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  }
+  .contrib-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .contrib-name {
+    font-family: "Inter", sans-serif;
+    font-weight: 600;
+    font-size: 14.5px;
+    color: #e7e9ee;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .contrib-meta {
+    font-size: 12px;
+    color: #7b8290;
+  }
+  .contrib-empty {
+    color: #b6bdc9;
+  }
+</style>

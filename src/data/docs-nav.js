@@ -89,6 +89,8 @@ export const docsUi = {
     next: 'Suivant',
     editHint: 'Une erreur ? Ouvre une issue sur GitHub.',
     backToSite: 'Accueil',
+    contributors: 'Contributeurs',
+    roadmap: 'Roadmap',
     searchPlaceholder: 'Rechercher…',
   },
   en: {
@@ -98,6 +100,8 @@ export const docsUi = {
     next: 'Next',
     editHint: 'Spotted a mistake? Open an issue on GitHub.',
     backToSite: 'Home',
+    contributors: 'Contributors',
+    roadmap: 'Roadmap',
     searchPlaceholder: 'Search…',
   },
 };
