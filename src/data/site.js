@@ -9,5 +9,9 @@
 // absolute domains, so a link from one host correctly jumps to the other.
 const DEV = import.meta.env.DEV;
 
-export const SITE_URL = DEV ? '' : 'https://nmrp.dev';
-export const DOCS_URL = DEV ? '' : 'https://docs.nmrp.dev';
+export const SITE_URL = DEV ? "" : "https://nmrp.dev";
+export const DOCS_URL = DEV ? "" : "https://docs.nmrp.dev";
+
+// Community Discord invite (same on both hosts).
+// TODO: replace with the real permanent invite link.
+export const DISCORD_URL = "https://discord.gg/g8DPwXVNWR";
