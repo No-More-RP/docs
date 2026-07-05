@@ -123,6 +123,44 @@ const translations = {
     --pagefind-ui-font: "Inter", system-ui, sans-serif;
     padding: 14px;
   }
+  /* Input: replace the browser's focus outline with a cyan ring. */
+  #search :global(.pagefind-ui__search-input:focus) {
+    outline: none;
+    border-color: #3dd6f3;
+    box-shadow: 0 0 0 3px rgba(45, 200, 235, 0.15);
+  }
+  #search :global(.pagefind-ui__search-clear) {
+    background: rgba(255, 255, 255, 0.05);
+    color: #9098a6;
+  }
+  #search :global(.pagefind-ui__search-clear:hover) {
+    color: #e7e9ee;
+  }
+
+  /* Matched-term highlight: cyan instead of the default yellow. */
+  #search :global(mark) {
+    background: rgba(45, 200, 235, 0.22);
+    color: #e7e9ee;
+    border-radius: 3px;
+    padding: 0 2px;
+  }
+
+  /* Result titles + hover. */
+  #search :global(.pagefind-ui__result-link) {
+    color: #e7e9ee;
+    text-decoration: none;
+  }
+  #search :global(.pagefind-ui__result-link:hover) {
+    color: #3dd6f3;
+    text-decoration: underline;
+  }
+  #search :global(.pagefind-ui__result-title) {
+    font-weight: 600;
+  }
+  #search :global(.pagefind-ui__result-excerpt) {
+    color: #9098a6;
+  }
+
   /* Keep the input pinned; scroll only the results. */
   #search :global(.pagefind-ui__drawer) {
     max-height: 56vh;
@@ -131,6 +169,7 @@ const translations = {
   }
   #search :global(.pagefind-ui__result) {
     border-top: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 14px 4px;
   }
   .search-dev {
     padding: 24px 4px;
