@@ -28,6 +28,8 @@ interface Props {
     editPath?: string;
     /** ISO date of the last update (git or frontmatter). */
     updated?: string | null;
+    /** Raw markdown of the page — powers the "Copy for AI" button. */
+    markdown?: string;
 }
 
 const {
@@ -38,6 +40,7 @@ const {
     headings = [],
     editPath,
     updated,
+    markdown,
 } = Astro.props;
 const isEn = lang === "en";
 const ui = docsUi[lang];
@@ -148,7 +151,7 @@ const updatedLabel = updated
                 </button>
                 <a href={homeHref} class="brand">
                     <img
-                        src={`${base}nmrp_full_512.png`}
+                        src={`${base}logo-64.png`}
                         alt="NoMoreRP"
                         class="brand-logo"
                         width="30"
@@ -371,6 +374,26 @@ const updatedLabel = updated
 
             <!-- CONTENT -->
             <main class="content" id="main-content" tabindex="-1">
+                {
+                    markdown && (
+                        <div class="doc-topbar">
+                            <button
+                                class="copy-ai"
+                                type="button"
+                                data-copy-ai
+                                data-md={markdown}
+                                data-label={ui.copyAi}
+                                data-done={ui.copied}
+                            >
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M12 3l1.9 4.6L18.5 9l-4.6 1.9L12 15.5l-1.9-4.6L5.5 9l4.6-1.4z" />
+                                    <path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z" />
+                                </svg>
+                                <span data-copy-ai-label>{ui.copyAi}</span>
+                            </button>
+                        </div>
+                    )
+                }
                 <article class="prose" data-pagefind-body>
                     <slot />
                 </article>
@@ -718,6 +741,42 @@ const updatedLabel = updated
     }
 
     /* PAGER */
+    .doc-topbar {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 4px;
+    }
+    .copy-ai {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        cursor: pointer;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        color: #9098a6;
+        font-family: "Inter", sans-serif;
+        font-size: 12.5px;
+        font-weight: 500;
+        padding: 6px 11px;
+        transition:
+            color 0.15s,
+            border-color 0.15s,
+            background 0.15s;
+    }
+    .copy-ai:hover {
+        color: #e7e9ee;
+        border-color: rgba(45, 200, 235, 0.4);
+        background: rgba(45, 200, 235, 0.06);
+    }
+    .copy-ai svg {
+        color: #3dd6f3;
+        flex-shrink: 0;
+    }
+    .copy-ai.copied {
+        color: #3dd6f3;
+        border-color: rgba(45, 200, 235, 0.5);
+    }
     .doc-meta {
         margin-top: 48px;
         display: flex;
@@ -1282,6 +1341,26 @@ const updatedLabel = updated
                     first.focus();
                 }
             }
+        });
+    })();
+
+    // "Copy for AI" — copy the page's raw markdown to the clipboard.
+    (function () {
+        const btn = document.querySelector("[data-copy-ai]");
+        if (!btn) return;
+        const label = btn.querySelector("[data-copy-ai-label]");
+        let timer;
+        btn.addEventListener("click", async () => {
+            try {
+                await navigator.clipboard.writeText(btn.dataset.md || "");
+                btn.classList.add("copied");
+                if (label) label.textContent = btn.dataset.done;
+                clearTimeout(timer);
+                timer = setTimeout(() => {
+                    btn.classList.remove("copied");
+                    if (label) label.textContent = btn.dataset.label;
+                }, 1800);
+            } catch (e) {}
         });
     })();
 </script>

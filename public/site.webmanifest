@@ -3,6 +3,7 @@
   "short_name": "NoMoreRP",
   "description": "An object-oriented MVC roleplay framework for nanos world.",
   "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
     { "src": "/nmrp_full_512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
   ],
   "theme_color": "#08090c",

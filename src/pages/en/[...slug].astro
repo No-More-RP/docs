@@ -17,6 +17,6 @@ const slug = entry.id.replace(/^en\//, '').replace(/\.md$/, '');
 const updated = entry.data.updated ?? lastCommitDate(`src/content/docs/${entry.id}`);
 ---
 
-<DocsLayout lang="en" slug={slug} title={entry.data.title} description={entry.data.description} headings={headings} editPath={`src/content/docs/${entry.id}`} updated={updated}>
+<DocsLayout lang="en" slug={slug} title={entry.data.title} description={entry.data.description} headings={headings} editPath={`src/content/docs/${entry.id}`} updated={updated} markdown={entry.body}>
   <Content />
 </DocsLayout>

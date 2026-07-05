@@ -19,7 +19,7 @@ return function(ctx)
             model = default_mesh,
             location = { X = location.X, Y = location.Y, Z = location.Z },
             rotation = { Pitch = rotation.Pitch, Yaw = rotation.Yaw, Roll = rotation.Roll },
-        });),
+        });
 
         local character <const> = Character(location, rotation, character_data.model, CollisionType.Auto, true, 100);
         player:Possess(character);
@@ -77,7 +77,7 @@ const docsHref = isEn
         <div class="nav-inner">
             <a href="#main-content" class="brand">
                 <img
-                    src={`${import.meta.env.BASE_URL}nmrp_full_512.png`}
+                    src={`${import.meta.env.BASE_URL}logo-64.png`}
                     alt="NoMoreRP"
                     class="brand-logo"
                     width="30"
@@ -140,6 +140,15 @@ const docsHref = isEn
                     class="btn-cyan btn-sm">{t.nav_cta}</a
                 >
             </div>
+            <button
+                class="nav-burger"
+                type="button"
+                data-nav-burger
+                aria-label="Menu"
+                aria-expanded="false"
+            >
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" /></svg>
+            </button>
         </div>
     </header>
 
@@ -535,7 +544,7 @@ git clone <span class="c-blue">.../nmrp-rpc nmrp-locale</span>
         <div class="footer-inner">
             <div class="footer-brand">
                 <img
-                    src={`${import.meta.env.BASE_URL}nmrp_full_512.png`}
+                    src={`${import.meta.env.BASE_URL}logo-64.png`}
                     alt="NoMoreRP"
                     class="footer-logo"
                     width="28"
@@ -612,6 +621,27 @@ git clone <span class="c-blue">.../nmrp-rpc nmrp-locale</span>
             { rootMargin: "0px 0px -8% 0px", threshold: 0.08 },
         );
         els.forEach((el) => io.observe(el));
+    })();
+
+    // Mobile nav menu (hamburger dropdown).
+    (function () {
+        const burger = document.querySelector("[data-nav-burger]");
+        const nav = document.querySelector(".nav");
+        if (!burger || !nav) return;
+        const close = () => {
+            nav.classList.remove("menu-open");
+            burger.setAttribute("aria-expanded", "false");
+        };
+        burger.addEventListener("click", () => {
+            const open = nav.classList.toggle("menu-open");
+            burger.setAttribute("aria-expanded", open ? "true" : "false");
+        });
+        nav.querySelectorAll(".nav-links a").forEach((a) =>
+            a.addEventListener("click", close),
+        );
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") close();
+        });
     })();
 
     // Live GitHub stars — total across the org, cached 24h in localStorage.
@@ -751,6 +781,21 @@ git clone <span class="c-blue">.../nmrp-rpc nmrp-locale</span>
         display: flex;
         gap: 26px;
         margin-left: 8px;
+    }
+    .nav-burger {
+        display: none;
+        place-items: center;
+        width: 38px;
+        height: 38px;
+        margin-left: 2px;
+        cursor: pointer;
+        background: none;
+        border: none;
+        color: #c3cad6;
+        transition: color 0.15s;
+    }
+    .nav-burger:hover {
+        color: #e7e9ee;
     }
     .nav-lnk {
         color: #9098a6;
@@ -1528,8 +1573,38 @@ git clone <span class="c-blue">.../nmrp-rpc nmrp-locale</span>
         .grid-2 {
             grid-template-columns: 1fr;
         }
+        .nav-burger {
+            display: grid;
+        }
+        /* CTA lives in the hero on mobile — declutter the bar. */
+        .nav-right .btn-cyan {
+            display: none;
+        }
+        /* nav links become a dropdown under the sticky header. */
         .nav-links {
             display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            flex-direction: column;
+            gap: 0;
+            margin: 0;
+            padding: 6px 24px 16px;
+            background: #0b0d11;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 24px 40px -12px rgba(0, 0, 0, 0.5);
+        }
+        .nav.menu-open .nav-links {
+            display: flex;
+        }
+        .nav-links .nav-lnk {
+            padding: 13px 2px;
+            font-size: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .nav-links .nav-lnk:last-child {
+            border-bottom: none;
         }
     }
     @media (max-width: 560px) {
