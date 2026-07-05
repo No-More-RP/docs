@@ -2,6 +2,54 @@
 import { dict } from "../data/i18n.js";
 import { DOCS_URL, DISCORD_URL } from "../data/site.js";
 import LangSwitch from "./LangSwitch.astro";
+import { Code } from "astro:components";
+
+// "Developer first" code preview — real Shiki highlighting (same engine as the
+// docs). Raw Lua strings, so no manual coloring / HTML escaping needed.
+const playerControllerLua = `---@param ctx AppContext
+return function(ctx)
+    local players <const> = ctx.services.player; ---@type PlayerService
+
+    ---@async
+    ---@param player Player
+    local function spawn(player)
+        local account_id <const> = player:GetAccountID();
+        local location , rotation = spawn_point.location, spawn_point.rotation;
+        local _, character_data <const> = players.load(player, {
+            model = default_mesh,
+            location = { X = location.X, Y = location.Y, Z = location.Z },
+            rotation = { Pitch = rotation.Pitch, Yaw = rotation.Yaw, Roll = rotation.Roll },
+        });),
+
+        local character <const> = Character(location, rotation, character_data.model, CollisionType.Auto, true, 100);
+        player:Possess(character);
+        logger:success("spawned player ^y%s^D character's", account_id);
+    end
+
+    Player.Subscribe("Spawn", threadify(spawn));
+end`;
+
+const playerModelLua = `---@alias PlayerModels { players: NormModel, characters: NormModel }
+---@param db NormOrm
+---@return PlayerModels
+return function(db)
+    local players <const> = db:define("players", {
+        id        = Norm.types.id(),
+        accountId = Norm.types.string({ length = 64, nullable = false, unique = true }),
+        character = Norm.types.hasOne("characters", { key = "player_id" }),
+    });
+
+    local characters <const> = db:define("characters", {
+        id          = Norm.types.id(),
+        player_id   = Norm.types.integer({ nullable = false }),
+        location    = Norm.types.json({ default = JSON.stringify({ X = 0, Y = 0, Z = 0 }) }),
+        rotation    = Norm.types.json({ default = JSON.stringify({ Pitch = 0, Yaw = 0, Roll = 0 }) }),
+        model       = Norm.types.string({ length = 64, nullable = false }),
+        player      = Norm.types.belongsTo("players", { key = "player_id", onDelete = "CASCADE" }),
+    });
+
+    return { players = players, characters = characters };
+end`;
 
 interface Props {
     lang?: "fr" | "en";
@@ -53,7 +101,16 @@ const docsHref = isEn
                     class="icon-lnk icon-discord"
                     aria-label="Discord"
                 >
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.317 4.3698a19.7913 19.7913 0 0 0-4.8851-1.5152.0741.0741 0 0 0-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 0 0-.0785-.037 19.7363 19.7363 0 0 0-4.8852 1.515.0699.0699 0 0 0-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 0 0 .0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 0 0 .0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 0 0-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 0 1-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 0 1 .0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 0 1 .0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 0 1-.0066.1276 12.2986 12.2986 0 0 1-1.873.8914.0766.0766 0 0 0-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 0 0 .0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 0 0 .0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 0 0-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9554 2.4189-2.1568 2.4189Z"/></svg>
+                    <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        aria-hidden="true"
+                        ><path
+                            d="M20.317 4.3698a19.7913 19.7913 0 0 0-4.8851-1.5152.0741.0741 0 0 0-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 0 0-.0785-.037 19.7363 19.7363 0 0 0-4.8852 1.515.0699.0699 0 0 0-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 0 0 .0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 0 0 .0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 0 0-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 0 1-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 0 1 .0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 0 1 .0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 0 1-.0066.1276 12.2986 12.2986 0 0 1-1.873.8914.0766.0766 0 0 0-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 0 0 .0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 0 0 .0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 0 0-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9554 2.4189-2.1568 2.4189Z"
+                        ></path></svg
+                    >
                 </a>
                 <a
                     href="https://github.com/No-More-RP"
@@ -62,7 +119,16 @@ const docsHref = isEn
                     class="icon-lnk"
                     aria-label="GitHub"
                 >
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.2.8-.5v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.8 18.3 5 18.3 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.6.8.5 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
+                    <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        aria-hidden="true"
+                        ><path
+                            d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.2.8-.5v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.8 18.3 5 18.3 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.6.8.5 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"
+                        ></path></svg
+                    >
                 </a>
                 <a
                     href="https://github.com/No-More-RP"
@@ -227,46 +293,30 @@ Packages/
                         type="button"
                         data-tab="0"
                         role="tab"
-                        aria-selected="true">PlayerController.lua</button
+                        aria-selected="true">player.controller.lua</button
                     >
                     <button
                         class="tab"
                         type="button"
                         data-tab="1"
                         role="tab"
-                        aria-selected="false">Character.lua</button
+                        aria-selected="false">player.model.lua</button
                     >
                 </div>
-                <pre
-                    class="code-body"
-                    data-panel="0"><span class="c-dim">-- {t.code_comment}</span>
-<span class="c-purple">local</span> Controller = <span class="c-blue">Registry</span>:<span class="c-blue">get</span>(<span class="c-cyan">"PlayerController"</span>)
-
-<span class="c-purple">function</span> Controller:<span class="c-blue">OnReady</span>(player)
-  <span class="c-dim">-- Norm ORM: load or create the character</span>
-  <span class="c-purple">local</span> char = Character
-    :<span class="c-blue">where</span>(<span class="c-cyan">"steam_id"</span>, player:<span class="c-blue">GetSteamID</span>())
-    :<span class="c-blue">firstOrCreate</span>():<span class="c-blue">await</span>()
-
-  <span class="c-dim">-- typed RPC back to the client</span>
-  RPC.<span class="c-blue">CallRemote</span>(<span class="c-cyan">"character:loaded"</span>, player, char:<span class="c-blue">toTable</span>())
-<span class="c-purple">end</span></pre>
-                <pre
-                    class="code-body"
-                    data-panel="1"
-                    hidden><span class="c-dim">-- Norm ORM model — one table, typed columns</span>
-<span class="c-purple">local</span> Character = <span class="c-blue">Norm</span>.<span class="c-blue">Model</span>(<span class="c-cyan">"characters"</span>)
-
-Character:<span class="c-blue">column</span>(<span class="c-cyan">"steam_id"</span>, <span class="c-cyan">"string"</span>)
-Character:<span class="c-blue">column</span>(<span class="c-cyan">"name"</span>, <span class="c-cyan">"string"</span>)
-Character:<span class="c-blue">column</span>(<span class="c-cyan">"money"</span>, <span class="c-cyan">"number"</span>, <span class="c-cyan">5000</span>)
-
-<span class="c-purple">function</span> Character:<span class="c-blue">give</span>(amount)
-  self.money = self.money + amount
-  <span class="c-purple">return</span> self:<span class="c-blue">save</span>()
-<span class="c-purple">end</span>
-
-<span class="c-purple">return</span> Character</pre>
+                <div class="code-body" data-panel="0">
+                    <Code
+                        code={playerControllerLua}
+                        lang="lua"
+                        theme="one-dark-pro"
+                    />
+                </div>
+                <div class="code-body" data-panel="1" hidden>
+                    <Code
+                        code={playerModelLua}
+                        lang="lua"
+                        theme="one-dark-pro"
+                    />
+                </div>
             </div>
         </div>
     </section>
@@ -322,7 +372,8 @@ Character:<span class="c-blue">column</span>(<span class="c-cyan">"money"</span>
                     <span class="dot" style="background:#28c840;"></span>
                     <span class="term-title">nmrp — quickstart</span>
                 </div>
-                <pre class="term-body"><span class="c-dim"># 1 · drop the packages into your server</span>
+                <pre
+                    class="term-body"><span class="c-dim"># 1 · drop the packages into your server</span>
 cd Packages/
 git clone --recursive <span class="c-blue">.../No-More-RP/nmrp</span>
 git clone --recursive <span class="c-blue">.../nmrp-promise nmrp-norm</span>
@@ -953,14 +1004,16 @@ git clone <span class="c-blue">.../nmrp-rpc nmrp-locale</span>
         background: rgba(45, 200, 235, 0.12);
         color: #3dd6f3;
     }
-    .code-body {
+    /* .code-body wraps a Shiki <pre> from the <Code> component. */
+    .code-body :global(pre.astro-code) {
         margin: 0;
-        padding: 20px;
+        padding: 18px 20px;
         font-family: "JetBrains Mono", monospace;
-        font-size: 12.5px;
-        line-height: 1.75;
-        color: #cbd2dd;
-        overflow-x: auto;
+        font-size: 12px;
+        line-height: 1.6;
+        max-height: 400px;
+        overflow: auto;
+        background: #0d0f14 !important;
     }
 
     /* modules */

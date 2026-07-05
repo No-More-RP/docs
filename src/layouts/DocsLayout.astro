@@ -649,6 +649,10 @@ const copyLabels = isEn
         font-size: 12.5px;
         color: #6b7280;
     }
+    .toc-item a.active {
+        color: #3dd6f3;
+        border-left-color: #3dd6f3;
+    }
 
     @media (max-width: 1120px) {
         .dlayout {
@@ -728,6 +732,28 @@ const copyLabels = isEn
     }
     .prose h2 + h3 {
         margin-top: 20px;
+    }
+    /* Hover anchor "#" on headings (injected by script). */
+    .prose :is(h2, h3) {
+        position: relative;
+    }
+    .prose .heading-anchor {
+        margin-left: 8px;
+        color: #4d5361;
+        border-bottom: none;
+        font-weight: 400;
+        text-decoration: none;
+        opacity: 0;
+        transition:
+            opacity 0.15s,
+            color 0.15s;
+    }
+    .prose :is(h2, h3):hover .heading-anchor,
+    .prose .heading-anchor:focus-visible {
+        opacity: 1;
+    }
+    .prose .heading-anchor:hover {
+        color: #3dd6f3;
     }
 
     /* The subtitle: a lead paragraph right after the H1. */
@@ -983,4 +1009,70 @@ const copyLabels = isEn
 
         wrap.appendChild(btn);
     });
+</script>
+
+<script is:inline>
+    // Heading anchors + "on this page" scroll-spy.
+    (function () {
+        const headings = [
+            ...document.querySelectorAll(".prose h2[id], .prose h3[id]"),
+        ];
+        if (!headings.length) return;
+
+        const isFr = document.documentElement.lang === "fr";
+
+        // 1. Append a hover "#" anchor to each heading.
+        headings.forEach((h) => {
+            const a = document.createElement("a");
+            a.className = "heading-anchor";
+            a.href = "#" + h.id;
+            a.textContent = "#";
+            a.setAttribute(
+                "aria-label",
+                isFr ? "Lien vers cette section" : "Link to this section",
+            );
+            a.addEventListener("click", () => {
+                const url =
+                    location.origin + location.pathname + "#" + h.id;
+                if (navigator.clipboard) navigator.clipboard.writeText(url);
+            });
+            h.appendChild(a);
+        });
+
+        // 2. Scroll-spy: highlight the current section in the TOC.
+        const links = new Map();
+        document.querySelectorAll(".toc-list a").forEach((a) => {
+            const href = a.getAttribute("href") || "";
+            if (href.startsWith("#"))
+                links.set(decodeURIComponent(href.slice(1)), a);
+        });
+        if (!links.size) return;
+
+        let current = null;
+        function setActive(id) {
+            if (id === current) return;
+            current = id;
+            links.forEach((a) => a.classList.remove("active"));
+            const a = links.get(id);
+            if (a) a.classList.add("active");
+        }
+
+        let ticking = false;
+        function onScroll() {
+            if (ticking) return;
+            ticking = true;
+            requestAnimationFrame(() => {
+                ticking = false;
+                let active = headings[0];
+                for (const h of headings) {
+                    if (h.getBoundingClientRect().top <= 100) active = h;
+                    else break;
+                }
+                setActive(active ? active.id : null);
+            });
+        }
+
+        window.addEventListener("scroll", onScroll, { passive: true });
+        onScroll();
+    })();
 </script>
