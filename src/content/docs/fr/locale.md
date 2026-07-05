@@ -26,6 +26,7 @@ Ajoute `nmrp-locale` aux `packages_requirements` de ton package :
 
 Le `Locale` global est alors disponible partout — l'état Lua est partagé entre les packages.
 
+> [!TIP]
 > Des snippets d'usage prêts à copier vivent dans [`examples/`](https://github.com/No-More-RP/nmrp-locale/tree/main/examples) (par script, serveur-par-joueur, WebUI). Ils ne sont ni chargés ni livrés — pure référence.
 
 ## Modèle de langue
@@ -122,6 +123,7 @@ Le namespace partagé est **global à chaque package**, donc le pack reste petit
 2. Ajoute une ligne dans `Shared/locales/Index.lua` : `load("<code>", "<code>.lua");`.
 3. Garde des clés **préfixées et universelles** (`common.*`, `time.*`, `unit.*`). Tout ce qui est spécifique au jeu/package appartient au namespace propre de ce package, pas ici.
 
+> [!IMPORTANT]
 > **Ajouter un tout nouveau code de langue ?** La liste des codes est dupliquée dans 4 endroits qui doivent rester synchronisés (il n'y a pas de source partagée entre les VM Lua et le bundle JS) :
 > - `Shared/locale.types.lua` — l'alias `LocaleLanguage` (autocomplétion)
 > - `Shared/locale.lua` — la table `Locale.Languages` (code → nom natif)
@@ -171,6 +173,7 @@ Locale.Attach(ui); -- pushes the store + language, follows Register/SetLanguage
 
 `locale.js` est livré dans ce package à `Client/web/locale.js`. Une WebUI résout les chemins `file:///` relativement **au dossier du package appelant**, donc le script doit se trouver à côté de ta page : **copie `Client/web/locale.js` dans le dossier WebUI de ton propre package** (ex. ton `Client/web/`, à côté d'`index.html`) et charge-le là.
 
+> [!TIP]
 > **TypeScript ?** Copie `Client/web/locale.d.ts` à côté — il type le global `window.Locale` (et exporte `LocaleNamespace`, `LocaleLanguage`, etc.).
 
 ```html

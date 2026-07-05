@@ -42,7 +42,8 @@ Raccourcis clavier en mode dev :
 - Glisser un objet — le déplace
 - Clic droit sur un objet — le jette
 
-> 💡 Le pont fictif n'existe que dans le navigateur. Dès que l'application tourne en jeu, le vrai objet `Events` est détecté et utilisé à la place — aucune modification de code nécessaire.
+> [!TIP]
+> Le pont fictif n'existe que dans le navigateur. Dès que l'application tourne en jeu, le vrai objet `Events` est détecté et utilisé à la place — aucune modification de code nécessaire.
 
 ## Mode prod (en jeu)
 
@@ -54,14 +55,17 @@ pnpm build         # outputs to dist/ (self-contained single-file index.html)
 
 Ce dépôt est **autonome** : il construit dans son propre `dist/` et n'écrit jamais directement dans le package du jeu. À chaque push sur `main`, un workflow CI (`.github/workflows/build-web.yml`) reconstruit le bundle et le commit dans le dépôt `nmrp`, à l'emplacement `Client/web/`.
 
-> ⚠️ nanos world ne synchronise que `Client/` et `Shared/` vers les clients, c'est pourquoi le bundle doit atterrir dans le `Client/web/` de `nmrp`. Les sources et `node_modules` restent dans ce dépôt et ne sont jamais envoyés aux joueurs.
+> [!WARNING]
+> nanos world ne synchronise que `Client/` et `Shared/` vers les clients, c'est pourquoi le bundle doit atterrir dans le `Client/web/` de `nmrp`. Les sources et `node_modules` restent dans ce dépôt et ne sont jamais envoyés aux joueurs.
 
 Le jeu charge `file:///web/index.html`, résolu relativement au script appelant (`Client/`), soit le chemin réel `Client/web/index.html` (voir `Client/app.lua` dans `nmrp`). Le build est un **unique fichier auto-suffisant** `index.html`, avec le JS et le CSS inlinés via `vite-plugin-singlefile` : sous `file://`, les assets séparés sont bloqués par CORS, tout doit donc être inliné dans un seul fichier.
 
 Une fois le déploiement CI arrivé sur `nmrp`, **recharge le package** (ou redémarre le serveur) pour que le nouveau `Client/web/` soit synchronisé vers les clients.
 
-> 💡 Hot-reload en jeu : mets `local DEV = true` dans `Client/app.lua` et lance `pnpm dev`. La WebUI pointera vers `http://localhost:5173` au lieu du fichier bundlé.
+> [!TIP]
+> Hot-reload en jeu : mets `local DEV = true` dans `Client/app.lua` et lance `pnpm dev`. La WebUI pointera vers `http://localhost:5173` au lieu du fichier bundlé.
 
+> [!NOTE]
 > `dev` n'a pas besoin de synchronisation : le client charge directement l'URL HTTP.
 
 ## Architecture
@@ -101,6 +105,7 @@ Les événements constituent le contrat entre Lua et JS. Pour en ajouter un :
 
 Garde `events.ts` et `Client/app.lua` synchronisés : ce couple est la **source de vérité** du contrat.
 
+> [!NOTE]
 > Les valeurs autoritaires côté serveur (par exemple la **stamina**) n'arrivent pas directement comme un événement WebUI. Elles passent par un remote nanos (`Events.CallRemote`, serveur → client), et `Client/app.lua` les transmet ensuite à la WebUI sous forme d'un `hud:update` classique.
 
 ## See also

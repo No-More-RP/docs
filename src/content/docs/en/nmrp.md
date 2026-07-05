@@ -42,6 +42,7 @@ The client UI is built with **Svelte + WebUI**.
 
 Make sure those packages exist in your server's `Packages/` folder, select `nmrp` as the active game mode, then start the server. The database connection is configured through the game-mode custom setting `database_connection` (new-game menu, `Config.toml`, or the server command line).
 
+> [!NOTE]
 > **Full setup.** This is only the short version. For prerequisites, cloning the packages (with submodules), configuring the database and adding add-ons, follow the complete [Installation](/en/installation) page.
 
 ## Architecture
@@ -56,6 +57,7 @@ nanos world runs two Lua VMs. Code is organized by which one it targets:
 | **Client** | `Client/` | UI (WebUI / Svelte), input, rendering. |
 | **Shared** | `Shared/` | Code loaded into **both** VMs (lib, classes, helpers, globals). |
 
+> [!IMPORTANT]
 > **Layer rule.** `Shared/` is loaded into both VMs, so it must never reach for server-only APIs (database, authority) or client-only APIs (WebUI, rendering). Keep those in `Server/` and `Client/` respectively.
 
 ### Bootstrap
@@ -97,6 +99,7 @@ A **module** is a folder `Server/modules/<name>/` exposing a descriptor (`<name>
 
 A service reaches others through `ctx.services.x` — and declares `depends = { "x" }` so the loader boots that dependency first.
 
+> [!IMPORTANT]
 > **Layer rule.** The **controller** owns everything that touches the engine (timers, subscriptions, inbound RPC, commands); the **service** is logic + lifecycle hooks. Keep engine wiring out of services.
 
 The reference module is [`Server/modules/player`](https://github.com/No-More-RP/nmrp/tree/main/Server/modules/player).
@@ -109,6 +112,7 @@ The reference module is [`Server/modules/player`](https://github.com/No-More-RP/
 4. Declare `depends` if the module relies on another.
 5. Add the module to `loader.boot(...)` in `Server/app.lua`.
 
+> [!NOTE]
 > A module with no persistence (runtime state only) has no `model`.
 
 ## Conventions

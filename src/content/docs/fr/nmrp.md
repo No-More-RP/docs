@@ -42,6 +42,7 @@ L'interface client est construite avec **Svelte + WebUI**.
 
 Assure-toi que ces packages existent dans le dossier `Packages/` de ton serveur, sélectionne `nmrp` comme game mode actif, puis démarre le serveur. La connexion à la base de données se configure via le custom setting de game mode `database_connection` (menu de nouvelle partie, `Config.toml` ou ligne de commande du serveur).
 
+> [!NOTE]
 > **Installation complète.** Ceci n'est que la version courte. Pour les prérequis, le clonage des packages (avec les submodules), la configuration de la base de données et l'ajout d'add-ons, suis la page complète [Installation](/installation).
 
 ## Architecture
@@ -56,6 +57,7 @@ nanos world exécute deux VMs Lua. Le code est organisé selon celle qu'il vise 
 | **Client** | `Client/` | UI (WebUI / Svelte), input, rendu. |
 | **Shared** | `Shared/` | Code chargé dans les **deux** VMs (lib, classes, helpers, globals). |
 
+> [!IMPORTANT]
 > **Règle de couche.** `Shared/` est chargé dans les deux VMs, il ne doit donc jamais toucher aux API réservées au serveur (base de données, autorité) ni à celles réservées au client (WebUI, rendu). Garde-les respectivement dans `Server/` et `Client/`.
 
 ### Bootstrap
@@ -95,6 +97,7 @@ Un **module** est un dossier `Server/modules/<name>/` exposant un descripteur (`
 
 Un service atteint les autres via `ctx.services.x` — et déclare `depends = { "x" }` pour que le loader démarre cette dépendance en premier.
 
+> [!IMPORTANT]
 > **Règle de couche.** Le **controller** possède tout ce qui touche au moteur (timers, subscriptions, RPC entrants, commandes) ; le **service** est logique + hooks de cycle de vie. Garde le câblage moteur hors des services.
 
 Le module de référence est [`Server/modules/player`](https://github.com/No-More-RP/nmrp/tree/main/Server/modules/player).
@@ -107,6 +110,7 @@ Le module de référence est [`Server/modules/player`](https://github.com/No-Mor
 4. Déclare `depends` si le module dépend d'un autre.
 5. Ajoute le module à `loader.boot(...)` dans `Server/app.lua`.
 
+> [!NOTE]
 > Un module sans persistance (état runtime uniquement) n'a pas de `model`.
 
 ## Conventions

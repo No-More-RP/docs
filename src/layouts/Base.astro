@@ -1,4 +1,14 @@
 ---
+// Self-hosted fonts (bundled by Astro, no third-party request). Latin subset —
+// covers FR + EN (Google's "latin" range includes œ/Œ).
+import "@fontsource/inter/latin-400.css";
+import "@fontsource/inter/latin-500.css";
+import "@fontsource/inter/latin-600.css";
+import "@fontsource/inter/latin-700.css";
+import "@fontsource/jetbrains-mono/latin-400.css";
+import "@fontsource/jetbrains-mono/latin-500.css";
+import "@fontsource/jetbrains-mono/latin-600.css";
+
 interface Props {
     title?: string;
     lang?: string;
@@ -27,6 +37,7 @@ const {
 } = Astro.props;
 
 const ogLocale = lang === "fr" ? "fr_FR" : "en_US";
+const skipLabel = lang === "fr" ? "Aller au contenu" : "Skip to content";
 
 const schemas = schema ? (Array.isArray(schema) ? schema : [schema]) : [];
 // Escape "<" so a stray "</script>" inside content can't break out of the tag.
@@ -45,6 +56,15 @@ const ld = (obj) => JSON.stringify(obj).replace(/</g, "\\u003c");
             type="image/png"
             href={`${import.meta.env.BASE_URL}nmrp_full_512.png`}
         />
+        <link
+            rel="apple-touch-icon"
+            href={`${import.meta.env.BASE_URL}nmrp_full_512.png`}
+        />
+        <link
+            rel="manifest"
+            href={`${import.meta.env.BASE_URL}site.webmanifest`}
+        />
+        <meta name="theme-color" content="#08090c" />
         <title>{title}</title>
 
         <!-- Open Graph -->
@@ -75,14 +95,9 @@ const ld = (obj) => JSON.stringify(obj).replace(/</g, "\\u003c");
             ))
         }
 
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
-            rel="stylesheet"
-        />
     </head>
     <body>
+        <a href="#main-content" class="skip-link">{skipLabel}</a>
         <slot />
     </body>
 </html>
@@ -105,6 +120,54 @@ const ld = (obj) => JSON.stringify(obj).replace(/</g, "\\u003c");
     ::selection {
         background: #3dd6f3;
         color: #08090c;
+    }
+
+    /* Keyboard focus ring — consistent, only for keyboard users. */
+    :focus-visible {
+        outline: 2px solid rgba(45, 200, 235, 0.75);
+        outline-offset: 2px;
+    }
+    /* Skip-link targets (main/hero) receive focus but shouldn't show a ring. */
+    [tabindex="-1"]:focus {
+        outline: none;
+    }
+
+    /* Skip to content — hidden until focused. */
+    .skip-link {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        z-index: 300;
+        transform: translateY(-160%);
+        background: #3dd6f3;
+        color: #08090c;
+        font-family: "Inter", system-ui, sans-serif;
+        font-weight: 600;
+        font-size: 14px;
+        text-decoration: none;
+        padding: 10px 16px;
+        border-radius: 9px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        transition: transform 0.18s ease;
+    }
+    .skip-link:focus-visible {
+        transform: translateY(0);
+        outline: none;
+    }
+
+    /* Respect reduced-motion: kill animations, transitions & smooth scroll. */
+    @media (prefers-reduced-motion: reduce) {
+        html {
+            scroll-behavior: auto;
+        }
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+            scroll-behavior: auto !important;
+        }
     }
 
     /* Thin, dark, subtle scrollbars everywhere (code panels, docs, sidebar…). */

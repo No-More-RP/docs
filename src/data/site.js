@@ -16,5 +16,7 @@ export const DOCS_URL = DEV ? "" : "https://docs.nmrp.dev";
 // TODO: replace with the real permanent invite link.
 export const DISCORD_URL = "https://discord.gg/g8DPwXVNWR";
 
-// GitHub source for the docs — used by the "Edit this page" links.
-export const EDIT_BASE = "https://github.com/No-More-RP/docs/edit/main";
+// GitHub repository for the docs.
+export const REPO_URL = "https://github.com/No-More-RP/docs";
+// Used by the "Edit this page" links.
+export const EDIT_BASE = `${REPO_URL}/edit/main`;

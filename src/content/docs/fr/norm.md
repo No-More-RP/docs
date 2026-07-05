@@ -7,8 +7,10 @@ description: Un package nanos world qui embarque Norm, un ORM Lua sans dépendan
 
 `nmrp-norm` embarque [Norm](https://justgodwork.github.io/norm-docs/) — un ORM Lua sans dépendances — et l'expose sous forme de global côté serveur pour que les autres packages puissent l'utiliser.
 
+> [!IMPORTANT]
 > **Côté serveur uniquement.** Norm dialogue avec une base de données, il vit donc dans `Server/` et expose un global `Norm`. Il n'a aucune surface côté client.
 
+> [!NOTE]
 > **Documentation complète de l'ORM.** Cette page ne couvre que ce qui est spécifique au package nanos world. L'API complète — modèles, relations, query builder, transactions, migrations, hooks, suppressions douces — se trouve sur le [site de documentation de Norm](https://justgodwork.github.io/norm-docs/) et dans le README du core à [`Server/vendor/norm/README.md`](https://github.com/No-More-RP/nmrp-norm/blob/main/Server/vendor/norm/README.md).
 
 ## Ce que c'est

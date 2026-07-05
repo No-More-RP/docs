@@ -1,5 +1,10 @@
 ---
-import { getContributors } from '../data/contributors.js';
+import {
+  ORG,
+  FALLBACK_REPOS,
+  TEAM,
+  ROLE_PRIORITY,
+} from '../data/contributors.js';
 
 interface Props {
   lang?: 'fr' | 'en';
@@ -12,6 +17,7 @@ const copy = {
       'NoMoreRP est construit par sa communauté. Merci à toutes les personnes qui contribuent au code, à la documentation et aux idées de l’écosystème.',
     count: (n) => `${n} contributeur${n > 1 ? 's' : ''}`,
     contributions: 'contributions',
+    loading: 'Chargement des contributeurs…',
     empty: 'Impossible de charger les contributeurs pour le moment.',
     seeGh: 'Voir sur GitHub',
     roles: { core: 'Core team', maintainer: 'Mainteneur' },
@@ -21,67 +27,35 @@ const copy = {
       'NoMoreRP is built by its community. Thanks to everyone contributing code, documentation and ideas across the ecosystem.',
     count: (n) => `${n} contributor${n > 1 ? 's' : ''}`,
     contributions: 'contributions',
+    loading: 'Loading contributors…',
     empty: 'Couldn’t load contributors right now.',
     seeGh: 'See them on GitHub',
     roles: { core: 'Core team', maintainer: 'Maintainer' },
   },
 }[lang];
 
-const contributors = await getContributors();
+// Sent to the client script (all public data).
+const config = {
+  org: ORG,
+  fallbackRepos: FALLBACK_REPOS,
+  team: TEAM,
+  rolePriority: ROLE_PRIORITY,
+  contributions: copy.contributions,
+  roles: copy.roles,
+  empty: copy.empty,
+  seeGh: copy.seeGh,
+  countOne: copy.count(1),
+  countMany: copy.count(2),
+};
 ---
 
 <p class="contrib-intro">{copy.intro}</p>
+<p class="contrib-count" data-contrib-count hidden></p>
+<div data-contrib-list>
+  <p class="contrib-loading">{copy.loading}</p>
+</div>
 
-{
-  contributors.length > 0 ? (
-    <>
-      <p class="contrib-count">{copy.count(contributors.length)}</p>
-      <ul class="contrib-grid">
-        {contributors.map((c) => (
-          <li>
-            <a
-              href={c.url}
-              target="_blank"
-              rel="noopener"
-              class="contrib-card"
-            >
-              <img
-                src={`${c.avatar}${c.avatar.includes('?') ? '&' : '?'}s=96`}
-                alt={c.login}
-                width="46"
-                height="46"
-                loading="lazy"
-                class="contrib-av"
-              />
-              <span class="contrib-info">
-                <span class="contrib-namerow">
-                  <span class="contrib-name">{c.login}</span>
-                  {c.role && (
-                    <span class={`contrib-badge role-${c.role}`}>
-                      {copy.roles[c.role] ?? c.role}
-                    </span>
-                  )}
-                </span>
-                <span class="contrib-meta">
-                  {c.contributions} {copy.contributions}
-                </span>
-              </span>
-            </a>
-          </li>
-        ))}
-      </ul>
-    </>
-  ) : (
-    <p class="contrib-empty">
-      {copy.empty}{' '}
-      <a href="https://github.com/No-More-RP" target="_blank" rel="noopener">
-        {copy.seeGh}
-      </a>
-    </p>
-  )
-}
-
-<style>
+<style is:global>
   .contrib-intro {
     color: #b6bdc9;
     font-size: 16px;
@@ -96,6 +70,10 @@ const contributors = await getContributors();
     text-transform: uppercase;
     color: #6b7280;
     margin: 0 0 16px;
+  }
+  .contrib-loading {
+    color: #7b8290;
+    font-size: 14px;
   }
   .contrib-grid {
     list-style: none;
@@ -186,3 +164,132 @@ const contributors = await getContributors();
     color: #b6bdc9;
   }
 </style>
+
+<script define:vars={{ cfg: config }}>
+  const CACHE_KEY = "nmrp:contributors";
+  const TTL = 24 * 60 * 60 * 1000; // 24h
+
+  const listEl = document.querySelector("[data-contrib-list]");
+  const countEl = document.querySelector("[data-contrib-count]");
+  if (listEl) init();
+
+  async function init() {
+    let data = readCache();
+    if (!data) {
+      data = await fetchAll();
+      if (data && data.length) writeCache(data);
+    }
+    render(data || []);
+  }
+
+  function readCache() {
+    try {
+      const raw = localStorage.getItem(CACHE_KEY);
+      if (!raw) return null;
+      const { t, data } = JSON.parse(raw);
+      if (Date.now() - t < TTL && Array.isArray(data) && data.length)
+        return data;
+    } catch (e) {}
+    return null;
+  }
+  function writeCache(data) {
+    try {
+      localStorage.setItem(CACHE_KEY, JSON.stringify({ t: Date.now(), data }));
+    } catch (e) {}
+  }
+
+  async function fetchAll() {
+    let repos = [];
+    try {
+      const r = await fetch(
+        `https://api.github.com/orgs/${cfg.org}/repos?per_page=100&type=public`,
+      );
+      if (r.ok) {
+        const l = await r.json();
+        if (Array.isArray(l)) repos = l.filter((x) => !x.fork).map((x) => x.name);
+      }
+    } catch (e) {}
+    if (!repos.length) repos = cfg.fallbackRepos;
+
+    const byLogin = new Map();
+    await Promise.all(
+      repos.map(async (repo) => {
+        try {
+          const r = await fetch(
+            `https://api.github.com/repos/${cfg.org}/${repo}/contributors?per_page=100`,
+          );
+          if (!r.ok) return;
+          const list = await r.json();
+          if (!Array.isArray(list)) return;
+          for (const c of list) {
+            if (c.type !== "User") continue;
+            const cur = byLogin.get(c.login) || {
+              login: c.login,
+              avatar: c.avatar_url,
+              url: c.html_url,
+              contributions: 0,
+              role: cfg.team[c.login.toLowerCase()] || null,
+            };
+            cur.contributions += c.contributions || 0;
+            byLogin.set(c.login, cur);
+          }
+        } catch (e) {}
+      }),
+    );
+
+    const rank = (role) => (role in cfg.rolePriority ? cfg.rolePriority[role] : 99);
+    return [...byLogin.values()].sort((a, b) => {
+      const d = rank(a.role) - rank(b.role);
+      return d !== 0 ? d : b.contributions - a.contributions;
+    });
+  }
+
+  function esc(s) {
+    return String(s).replace(
+      /[&<>"']/g,
+      (c) =>
+        ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#39;",
+        })[c],
+    );
+  }
+
+  function render(data) {
+    if (!data.length) {
+      listEl.innerHTML =
+        `<p class="contrib-empty">${cfg.empty} ` +
+        `<a href="https://github.com/${cfg.org}" target="_blank" rel="noopener">${cfg.seeGh}</a></p>`;
+      return;
+    }
+    if (countEl) {
+      countEl.textContent =
+        data.length > 1
+          ? cfg.countMany.replace(/\d+/, data.length)
+          : cfg.countOne;
+      countEl.hidden = false;
+    }
+    listEl.innerHTML =
+      '<ul class="contrib-grid">' +
+      data
+        .map((c) => {
+          const badge = c.role
+            ? `<span class="contrib-badge role-${c.role}">${cfg.roles[c.role] || c.role}</span>`
+            : "";
+          const av = `${c.avatar}${c.avatar.includes("?") ? "&" : "?"}s=96`;
+          return (
+            `<li><a href="${esc(c.url)}" target="_blank" rel="noopener" class="contrib-card">` +
+            `<img src="${esc(av)}" alt="${esc(c.login)}" width="46" height="46" loading="lazy" class="contrib-av">` +
+            `<span class="contrib-info"><span class="contrib-namerow">` +
+            `<span class="contrib-name">${esc(c.login)}</span>${badge}</span>` +
+            `<span class="contrib-meta">${c.contributions} ${esc(cfg.contributions)}</span>` +
+            `</span></a></li>`
+          );
+        })
+        .join("") +
+      "</ul>";
+  }
+</script>

@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import DocsLayout from '../../layouts/DocsLayout.astro';
+import { lastCommitDate } from '../../data/git.js';
 
 export async function getStaticPaths() {
   const entries = await getCollection('docs', (e) => e.id.startsWith('en/'));
@@ -13,8 +14,9 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 const { Content, headings } = await entry.render();
 const slug = entry.id.replace(/^en\//, '').replace(/\.md$/, '');
+const updated = entry.data.updated ?? lastCommitDate(`src/content/docs/${entry.id}`);
 ---
 
-<DocsLayout lang="en" slug={slug} title={entry.data.title} description={entry.data.description} headings={headings} editPath={`src/content/docs/${entry.id}`}>
+<DocsLayout lang="en" slug={slug} title={entry.data.title} description={entry.data.description} headings={headings} editPath={`src/content/docs/${entry.id}`} updated={updated}>
   <Content />
 </DocsLayout>

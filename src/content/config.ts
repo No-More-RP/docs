@@ -7,6 +7,9 @@ const docs = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string().optional(),
+    // Optional manual override for "last updated" (ISO date, e.g. 2026-07-05).
+    // When absent, the last git commit date of the file is used.
+    updated: z.string().optional(),
   }),
 });
 

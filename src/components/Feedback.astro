@@ -1,0 +1,149 @@
+---
+interface Props {
+  lang?: 'fr' | 'en';
+  slug: string;
+  issueUrl: string;
+}
+const { lang = 'fr', slug, issueUrl } = Astro.props;
+
+const t = {
+  fr: {
+    q: 'Cette page vous a-t-elle aidé ?',
+    yes: 'Oui',
+    no: 'Non',
+    thanks: 'Merci pour votre retour !',
+    tellMore: 'Dites-nous ce qui manque',
+  },
+  en: {
+    q: 'Was this page helpful?',
+    yes: 'Yes',
+    no: 'No',
+    thanks: 'Thanks for your feedback!',
+    tellMore: 'Tell us what’s missing',
+  },
+}[lang];
+
+const thumbUp =
+  '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 11v9H4a1 1 0 0 1-1-1v-7a1 1 0 0 1 1-1z"/><path d="M7 11l4-8a2 2 0 0 1 2.6 2.6L12 9h6a2 2 0 0 1 2 2.3l-1.2 6A2 2 0 0 1 16.8 19H7"/></svg>';
+const thumbDown =
+  '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 13V4h3a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1z"/><path d="M17 13l-4 8a2 2 0 0 1-2.6-2.6L12 15H6a2 2 0 0 1-2-2.3l1.2-6A2 2 0 0 1 7.2 5H17"/></svg>';
+---
+
+<div class="feedback" data-feedback data-key={`${lang}:${slug}`}>
+  <p class="feedback-q">{t.q}</p>
+  <div class="feedback-actions">
+    <button class="feedback-btn" type="button" data-vote="yes">
+      <Fragment set:html={thumbUp} />{t.yes}
+    </button>
+    <button class="feedback-btn" type="button" data-vote="no">
+      <Fragment set:html={thumbDown} />{t.no}
+    </button>
+  </div>
+  <p class="feedback-thanks" hidden>
+    <span>{t.thanks}</span>
+    <a href={issueUrl} target="_blank" rel="noopener" class="feedback-issue" hidden>{t.tellMore}</a>
+  </p>
+</div>
+
+<style>
+  .feedback {
+    margin: 48px 0 0;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.02);
+    text-align: center;
+  }
+  .feedback-q {
+    margin: 0 0 14px;
+    font-family: "Inter", sans-serif;
+    font-weight: 600;
+    font-size: 14.5px;
+    color: #e7e9ee;
+  }
+  .feedback-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+  .feedback-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 9px;
+    color: #c3cad6;
+    font-family: "Inter", sans-serif;
+    font-size: 13.5px;
+    font-weight: 500;
+    padding: 8px 18px;
+    transition:
+      color 0.15s,
+      border-color 0.15s,
+      background 0.15s;
+  }
+  .feedback-btn[data-vote="yes"]:hover {
+    color: #4ade80;
+    border-color: rgba(74, 222, 128, 0.4);
+    background: rgba(74, 222, 128, 0.08);
+  }
+  .feedback-btn[data-vote="no"]:hover {
+    color: #f87171;
+    border-color: rgba(248, 113, 113, 0.4);
+    background: rgba(248, 113, 113, 0.08);
+  }
+  .feedback-thanks {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    color: #3dd6f3;
+  }
+  .feedback-issue {
+    color: #9098a6;
+    font-size: 13px;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(144, 152, 166, 0.4);
+  }
+  .feedback-issue:hover {
+    color: #e7e9ee;
+    border-bottom-color: #e7e9ee;
+  }
+</style>
+
+<script is:inline>
+  document.querySelectorAll("[data-feedback]").forEach((box) => {
+    const key = "nmrp:fb:" + box.getAttribute("data-key");
+    const actions = box.querySelector(".feedback-actions");
+    const question = box.querySelector(".feedback-q");
+    const thanks = box.querySelector(".feedback-thanks");
+    const issue = box.querySelector(".feedback-issue");
+
+    function showThanks(vote) {
+      if (question) question.hidden = true;
+      if (actions) actions.hidden = true;
+      if (thanks) thanks.hidden = false;
+      if (vote === "no" && issue) issue.hidden = false;
+    }
+
+    let prior = null;
+    try {
+      prior = localStorage.getItem(key);
+    } catch (e) {}
+    if (prior) showThanks(prior);
+
+    box.querySelectorAll("[data-vote]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const vote = btn.getAttribute("data-vote");
+        try {
+          localStorage.setItem(key, vote);
+        } catch (e) {}
+        showThanks(vote);
+      });
+    });
+  });
+</script>

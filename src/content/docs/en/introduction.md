@@ -49,4 +49,5 @@ On the server, features are organized as **MVC modules** wired by dependency inj
 - **Just want a library?** Each package page is self-contained — jump straight to [nmrp-promise](/en/promise), [nmrp-rpc](/en/rpc), [nmrp-norm](/en/norm) or [nmrp-locale](/en/locale).
 - **Building a full gamemode?** Read [nmrp](/en/nmrp) for the MVC + DI model.
 
+> [!NOTE]
 > Every package is MIT-licensed and lives on GitHub under the [No-More-RP](https://github.com/No-More-RP) organization. Contributions are welcome.

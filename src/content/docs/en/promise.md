@@ -28,6 +28,7 @@ Add `nmrp-promise` to your package `packages_requirements`:
 
 The globals `Promise`, `async` and `await` are then available everywhere — the Lua state is shared between packages, on both server and client.
 
+> [!TIP]
 > The core ships vendored, so the package runs out of the box. If you cloned the repo, pull the submodule first: `git submodule update --init --recursive`.
 
 ## Creating a promise
@@ -74,6 +75,7 @@ fetch_user(id)
 | `:Await()` / `:await()` | Block the current coroutine for the value (re-raises rejections). |
 | `:GetState()` / `:IsSettled()` | Introspection. |
 
+> [!WARNING]
 > `:Await()` parks a coroutine, so it must run inside one (an `async(...)` body or a `coroutine.wrap`). It is forbidden on the main thread.
 
 ## Combinators (static)

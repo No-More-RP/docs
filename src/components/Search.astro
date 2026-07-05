@@ -312,12 +312,36 @@ const translations = {
     openEls.forEach((el) => el.addEventListener("click", open));
     closeEls.forEach((el) => el.addEventListener("click", close));
 
+    const panel = modal.querySelector(".search-panel");
+    function focusables() {
+      return [
+        ...panel.querySelectorAll(
+          'a[href], button, input, [tabindex]:not([tabindex="-1"])',
+        ),
+      ].filter((el) => !el.disabled && el.offsetParent !== null);
+    }
+
     document.addEventListener("keydown", (e) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
         modal.hidden ? open() : close();
-      } else if (e.key === "Escape" && !modal.hidden) {
+      } else if (modal.hidden) {
+        return;
+      } else if (e.key === "Escape") {
         close();
+      } else if (e.key === "Tab") {
+        // Trap focus inside the modal.
+        const list = focusables();
+        if (!list.length) return;
+        const first = list[0];
+        const last = list[list.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
       }
     });
   }

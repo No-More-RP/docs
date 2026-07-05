@@ -48,6 +48,7 @@ RPCEvents.CallAsync("getTime"):Then(function(time) print(time); end);
 
 Enregistre avec `SubscribeRemote` ; appelle avec `CallRemote` / `CallRemoteAsync`. La réponse distante est asynchrone, donc `CallRemote` doit tourner dans une coroutine.
 
+> [!IMPORTANT]
 > **Côté serveur, le premier argument de `CallRemote` / `CallRemoteAsync` est le `Player` cible.** De même, les handlers distants côté serveur reçoivent ce `player` comme premier paramètre.
 
 ```lua

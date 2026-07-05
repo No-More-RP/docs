@@ -49,4 +49,5 @@ Côté serveur, les fonctionnalités sont organisées en **modules MVC** câblé
 - **Juste une lib ?** Chaque page de package est autonome — va directement à [nmrp-promise](/promise), [nmrp-rpc](/rpc), [nmrp-norm](/norm) ou [nmrp-locale](/locale).
 - **Un gamemode complet ?** Lis [nmrp](/nmrp) pour le modèle MVC + DI.
 
+> [!NOTE]
 > Chaque package est sous licence MIT et vit sur GitHub dans l'organisation [No-More-RP](https://github.com/No-More-RP). Les contributions sont les bienvenues.

@@ -42,7 +42,8 @@ Keybinds in dev mode:
 - Drag an item — move it
 - Right-click an item — drop it
 
-> 💡 The mock bridge only exists in the browser. As soon as the app runs in game, the real `Events` object is detected and used instead — no code change required.
+> [!TIP]
+> The mock bridge only exists in the browser. As soon as the app runs in game, the real `Events` object is detected and used instead — no code change required.
 
 ## Prod mode (in game)
 
@@ -54,14 +55,17 @@ pnpm build         # outputs to dist/ (self-contained single-file index.html)
 
 This repo is **standalone**: it builds to its own `dist/` and never writes into the game package directly. On every push to `main`, a CI workflow (`.github/workflows/build-web.yml`) rebuilds the bundle and commits it into the `nmrp` repo at `Client/web/`.
 
-> ⚠️ nanos world only syncs `Client/` and `Shared/` to clients, which is why the bundle must land in `nmrp`'s `Client/web/`. The sources and `node_modules` stay in this repo and are never sent to players.
+> [!WARNING]
+> nanos world only syncs `Client/` and `Shared/` to clients, which is why the bundle must land in `nmrp`'s `Client/web/`. The sources and `node_modules` stay in this repo and are never sent to players.
 
 The game loads `file:///web/index.html`, resolved relative to the calling script (`Client/`), so the real path is `Client/web/index.html` (see `Client/app.lua` in `nmrp`). The build is a **single self-contained** `index.html`, with JS and CSS inlined via `vite-plugin-singlefile`: under `file://`, separate assets are blocked by CORS, so everything must be inlined into one file.
 
 After the CI deploy lands on `nmrp`, **reload the package** (or restart the server) so the new `Client/web/` is synced to clients.
 
-> 💡 In-game hot-reload: set `local DEV = true` in `Client/app.lua` and run `pnpm dev`. The WebUI will point to `http://localhost:5173` instead of the bundled file.
+> [!TIP]
+> In-game hot-reload: set `local DEV = true` in `Client/app.lua` and run `pnpm dev`. The WebUI will point to `http://localhost:5173` instead of the bundled file.
 
+> [!NOTE]
 > `dev` does not need a sync: the client loads the HTTP URL directly.
 
 ## Architecture
@@ -101,6 +105,7 @@ Events are the contract between Lua and JS. To add one:
 
 Keep `events.ts` and `Client/app.lua` in sync: that pair is the **source of truth** for the contract.
 
+> [!NOTE]
 > Server-authoritative values (for example **stamina**) don't arrive as a WebUI event directly. They come via a nanos remote (`Events.CallRemote`, server → client), and `Client/app.lua` forwards them into the WebUI as a normal `hud:update`.
 
 ## See also

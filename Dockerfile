@@ -5,6 +5,9 @@ FROM node:22-alpine AS build
 
 WORKDIR /app
 
+# git is used at build time to compute each doc page's "last updated" date.
+RUN apk add --no-cache git
+
 # The project uses pnpm (see pnpm-lock.yaml); enable it via corepack.
 RUN corepack enable
 
@@ -13,12 +16,9 @@ COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 
 # Build the static site into /app/dist (also renders the OG images).
-# Optional GITHUB_TOKEN raises the GitHub API rate limit (60→5000/h) so the
-# contributors page reliably populates at build time. Pass it with
-#   docker build --build-arg GITHUB_TOKEN=xxxx .
+# .git is included (see .dockerignore) so the build can read each page's
+# last-commit date for the "last updated" line.
 COPY . .
-ARG GITHUB_TOKEN=""
-ENV GITHUB_TOKEN=$GITHUB_TOKEN
 RUN pnpm run build
 
 # --- Runtime stage ---------------------------------------------------------

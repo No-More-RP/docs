@@ -43,6 +43,7 @@ C'est un package **script**, pas un game-mode. Il tourne par-dessus le game-mode
 
 4. Démarre (ou redémarre) le serveur. L'add-on se charge après le core NMRP et s'enregistre tout seul.
 
+> [!WARNING]
 > L'erreur la plus fréquente est de mettre ce package dans `game_mode`. C'est un add-on : garde `game_mode = "nmrp"` et ajoute `nmrp-character-needs` à la liste `packages`. Consulte [Installation](/installation) pour la mise en place complète du serveur.
 
 ## Comment ça marche

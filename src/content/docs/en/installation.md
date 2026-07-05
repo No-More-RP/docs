@@ -27,6 +27,7 @@ git clone https://github.com/No-More-RP/nmrp-rpc
 git clone https://github.com/No-More-RP/nmrp-locale
 ```
 
+> [!TIP]
 > `nmrp-promise` and `nmrp-norm` vendor their cores as **git submodules**. Use `--recursive` when cloning, or run `git submodule update --init --recursive` inside the folder afterwards.
 
 The gamemode declares those dependencies in its own `Package.toml`, so the engine loads them in the right order:
@@ -54,6 +55,7 @@ In your server's `Config.toml`, set `nmrp` as the active game mode:
     ]
 ```
 
+> [!NOTE]
 > **Game modes vs. packages.** `nmrp` is a *game-mode* package, so it goes in `game_mode`. Add-ons like [`nmrp-character-needs`](/en/character-needs) are *script* packages — they go in the `packages` list instead, never in `game_mode`.
 
 ## 3. Configure the database
@@ -63,6 +65,9 @@ The database connection is a **game-mode custom setting** — you can set it fro
 ```toml
 database_connection = "db=nmrp user=root host=127.0.0.1 port=3307"
 ```
+
+> [!WARNING]
+> Don't ship the default connection (`root`, no password) to production — create a dedicated user with limited privileges.
 
 Other custom settings:
 
