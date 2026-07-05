@@ -10,6 +10,8 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^4.15.0"
+    "astro": "^4.15.0",
+    "astro-og-canvas": "0.7.0",
+    "canvaskit-wasm": "^0.39.1"
   }
 }

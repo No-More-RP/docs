@@ -5,13 +5,16 @@ FROM node:22-alpine AS build
 
 WORKDIR /app
 
-# Install dependencies first to leverage Docker layer caching.
-COPY package.json package-lock.json* ./
-RUN npm install
+# The project uses pnpm (see pnpm-lock.yaml); enable it via corepack.
+RUN corepack enable
 
-# Build the static site into /app/dist.
+# Install dependencies first to leverage Docker layer caching.
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
+
+# Build the static site into /app/dist (also renders the OG images).
 COPY . .
-RUN npm run build
+RUN pnpm run build
 
 # --- Runtime stage ---------------------------------------------------------
 FROM nginx:alpine AS runtime

@@ -1,8 +1,15 @@
 ---
 import Base from '../layouts/Base.astro';
 import Landing from '../components/Landing.astro';
+import { SITE_URL } from '../data/site.js';
 ---
 
-<Base lang="fr" title="NoMoreRP — framework roleplay MVC pour nanos world">
+<Base
+  lang="fr"
+  title="NoMoreRP — framework roleplay MVC pour nanos world"
+  description="NoMoreRP — une base de gamemode MVC orientée objet pour nanos world, avec des packages Lua sans dépendance pour le RPC, l'ORM, les promesses et l'i18n."
+  canonical={`${SITE_URL}/`}
+  image={`${SITE_URL}/og/home.png`}
+>
   <Landing lang="fr" />
 </Base>

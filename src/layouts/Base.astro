@@ -1,6 +1,29 @@
 ---
-interface Props { title?: string; lang?: string; }
-const { title = 'NoMoreRP — MVC roleplay framework for nanos world', lang = 'fr' } = Astro.props;
+interface Props {
+  title?: string;
+  lang?: string;
+  description?: string;
+  /** Absolute URL of the Open Graph / Twitter card image. */
+  image?: string;
+  /** Absolute canonical URL of the page. */
+  canonical?: string;
+  /** Open Graph object type. */
+  type?: 'website' | 'article';
+}
+
+const DEFAULT_DESC =
+  'NoMoreRP — an object-oriented MVC gamemode base for nanos world, backed by dependency-free Lua packages for RPC, ORM, promises and i18n.';
+
+const {
+  title = 'NoMoreRP — MVC roleplay framework for nanos world',
+  lang = 'fr',
+  description = DEFAULT_DESC,
+  image,
+  canonical,
+  type = 'website',
+} = Astro.props;
+
+const ogLocale = lang === 'fr' ? 'fr_FR' : 'en_US';
 ---
 
 <!doctype html>
@@ -8,12 +31,31 @@ const { title = 'NoMoreRP — MVC roleplay framework for nanos world', lang = 'f
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="NoMoreRP — an object-oriented MVC gamemode base for nanos world, backed by dependency-free Lua packages for RPC, ORM, promises and i18n." />
+    <meta name="description" content={description} />
+    {canonical && <link rel="canonical" href={canonical} />}
     <link rel="icon" type="image/png" href={`${import.meta.env.BASE_URL}nmrp_full_512.png`} />
     <title>{title}</title>
+
+    <!-- Open Graph -->
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content="NoMoreRP" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:locale" content={ogLocale} />
+    {canonical && <meta property="og:url" content={canonical} />}
+    {image && <meta property="og:image" content={image} />}
+    {image && <meta property="og:image:width" content="1200" />}
+    {image && <meta property="og:image:height" content="630" />}
+    {image && <meta property="og:image:alt" content={title} />}
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content={image ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {image && <meta name="twitter:image" content={image} />}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   </head>
   <body>
     <slot />

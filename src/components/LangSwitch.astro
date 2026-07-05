@@ -1,0 +1,102 @@
+---
+// Shared language selector (flag dropdown) used in the landing + docs headers.
+// Switching language is a navigation (distinct href per language), so the menu
+// items are links rather than a native <select> (which would need JS to route).
+interface Props {
+  isEn: boolean;
+  frHref: string;
+  enHref: string;
+}
+const { isEn, frHref, enHref } = Astro.props;
+
+// Inline SVG flags — emoji flags don't render on Windows, so we draw them.
+const frFlag =
+  '<svg viewBox="0 0 60 42" aria-hidden="true"><rect width="20" height="42" fill="#0055A4"/><rect x="20" width="20" height="42" fill="#fff"/><rect x="40" width="20" height="42" fill="#EF4135"/></svg>';
+const gbFlag =
+  '<svg viewBox="0 0 60 42" aria-hidden="true"><rect width="60" height="42" fill="#012169"/><path d="M0 0 60 42M60 0 0 42" stroke="#fff" stroke-width="8"/><path d="M0 0 60 42M60 0 0 42" stroke="#C8102E" stroke-width="4"/><rect x="25" width="10" height="42" fill="#fff"/><rect y="16" width="60" height="10" fill="#fff"/><rect x="27" width="6" height="42" fill="#C8102E"/><rect y="18" width="60" height="6" fill="#C8102E"/></svg>';
+---
+
+<div class="lang-switch" data-lang-switch>
+  <button class="lang-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="Language">
+    <span class="flag" set:html={isEn ? gbFlag : frFlag} />
+    <span class="lang-code">{isEn ? 'EN' : 'FR'}</span>
+    <svg class="chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+  </button>
+
+  <ul class="lang-menu" role="listbox">
+    <li>
+      <a href={frHref} class={`lang-opt${isEn ? '' : ' active'}`} role="option" aria-selected={!isEn}>
+        <span class="flag" set:html={frFlag} />
+        <span>Français</span>
+      </a>
+    </li>
+    <li>
+      <a href={enHref} class={`lang-opt${isEn ? ' active' : ''}`} role="option" aria-selected={isEn}>
+        <span class="flag" set:html={gbFlag} />
+        <span>English</span>
+      </a>
+    </li>
+  </ul>
+</div>
+
+<style>
+  .lang-switch { position:relative; }
+
+  .flag { width:20px; height:14px; border-radius:3px; overflow:hidden; display:block; flex-shrink:0; box-shadow:inset 0 0 0 1px rgba(255,255,255,0.14); }
+  .flag :global(svg) { width:100%; height:100%; display:block; }
+
+  .lang-trigger {
+    display:flex; align-items:center; gap:7px; cursor:pointer;
+    background:rgba(255,255,255,0.03); color:#c3cad6;
+    border:1px solid rgba(255,255,255,0.1); border-radius:8px;
+    padding:6px 9px; font-family:'JetBrains Mono',monospace; font-size:12px; line-height:1;
+    transition:border-color .15s, background .15s;
+  }
+  .lang-trigger:hover { border-color:rgba(45,200,235,0.4); background:rgba(45,200,235,0.05); color:#e7e9ee; }
+  .lang-code { letter-spacing:0.02em; }
+  .chev { color:#7b8290; transition:transform .18s ease; }
+  .lang-switch.open .chev { transform:rotate(180deg); }
+
+  .lang-menu {
+    position:absolute; right:0; top:calc(100% + 8px); z-index:60;
+    min-width:158px; margin:0; padding:5px; list-style:none;
+    background:rgba(13,15,20,0.98); border:1px solid rgba(255,255,255,0.1);
+    border-radius:11px; box-shadow:0 14px 34px rgba(0,0,0,0.5);
+    backdrop-filter:blur(12px);
+    opacity:0; transform:translateY(-6px); pointer-events:none;
+    transition:opacity .16s ease, transform .16s ease;
+  }
+  .lang-switch.open .lang-menu { opacity:1; transform:translateY(0); pointer-events:auto; }
+
+  .lang-opt {
+    display:flex; align-items:center; gap:10px;
+    text-decoration:none; color:#9098a6; font-size:13.5px;
+    padding:8px 10px; border-radius:7px;
+    transition:color .15s, background .15s;
+  }
+  .lang-opt:hover { color:#e7e9ee; background:rgba(255,255,255,0.05); }
+  .lang-opt.active { color:#3dd6f3; }
+  .lang-opt.active .flag { box-shadow:inset 0 0 0 1px rgba(255,255,255,0.14), 0 0 0 2px rgba(45,200,235,0.5); }
+</style>
+
+<script>
+  // Toggle the open menu; close on outside click or Escape.
+  const switches = document.querySelectorAll('[data-lang-switch]');
+  switches.forEach((el) => {
+    const trigger = el.querySelector('.lang-trigger');
+    trigger?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const open = el.classList.toggle('open');
+      trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  });
+  const closeAll = () =>
+    document.querySelectorAll('[data-lang-switch].open').forEach((el) => {
+      el.classList.remove('open');
+      el.querySelector('.lang-trigger')?.setAttribute('aria-expanded', 'false');
+    });
+  document.addEventListener('click', closeAll);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeAll();
+  });
+</script>

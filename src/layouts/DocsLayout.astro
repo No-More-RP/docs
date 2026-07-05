@@ -1,7 +1,8 @@
 ---
 import Base from './Base.astro';
+import LangSwitch from '../components/LangSwitch.astro';
 import { docsNav, docsUi } from '../data/docs-nav.js';
-import { SITE_URL } from '../data/site.js';
+import { SITE_URL, DOCS_URL } from '../data/site.js';
 
 interface Heading { depth: number; slug: string; text: string; }
 interface Props {
@@ -39,9 +40,20 @@ const next = idx >= 0 && idx < flat.length - 1 ? flat[idx + 1] : null;
 const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
 
 const pageTitle = `${title} — NoMoreRP Docs`;
+
+// Canonical URL + per-page Open Graph card (see src/pages/og/[...route].ts).
+const canonical = `${DOCS_URL}/${isEn ? 'en/' : ''}${slug}`;
+const ogImage = `${DOCS_URL}/og/${isEn ? 'en' : 'fr'}/${slug}.png`;
 ---
 
-<Base lang={lang} title={pageTitle}>
+<Base
+  lang={lang}
+  title={pageTitle}
+  description={description}
+  canonical={canonical}
+  image={ogImage}
+  type="article"
+>
   <div class="docs">
     <div class="glow"></div>
 
@@ -55,10 +67,7 @@ const pageTitle = `${title} — NoMoreRP Docs`;
         </a>
         <div class="dnav-right">
           <a href={homeHref} class="dnav-lnk">{ui.backToSite}</a>
-          <div class="lang-toggle">
-            <a href={frDocHref} class="lang-btn" style={`background:${isEn ? 'transparent' : '#3dd6f3'};color:${isEn ? '#9098a6' : '#08090c'};`}>FR</a>
-            <a href={enDocHref} class="lang-btn" style={`background:${isEn ? '#3dd6f3' : 'transparent'};color:${isEn ? '#08090c' : '#9098a6'};`}>EN</a>
-          </div>
+          <LangSwitch isEn={isEn} frHref={frDocHref} enHref={enDocHref} />
           <a href="https://github.com/No-More-RP" target="_blank" rel="noopener" class="icon-lnk" aria-label="GitHub">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.2.8-.5v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.8 18.3 5 18.3 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.6.8.5 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
           </a>
@@ -127,7 +136,7 @@ const pageTitle = `${title} — NoMoreRP Docs`;
 </Base>
 
 <style>
-  .docs { color:#e7e9ee; font-family:'Manrope',system-ui,sans-serif; min-height:100vh; position:relative; }
+  .docs { color:#e7e9ee; font-family:'Inter',system-ui,sans-serif; min-height:100vh; position:relative; }
   .accent { color:#3dd6f3; }
   .glow { position:absolute; top:-260px; left:50%; transform:translateX(-50%); width:1100px; height:560px; background:radial-gradient(ellipse at center, rgba(45,200,235,0.12), rgba(8,9,12,0) 68%); pointer-events:none; z-index:0; }
 
@@ -136,13 +145,11 @@ const pageTitle = `${title} — NoMoreRP Docs`;
   .dnav-inner { max-width:1320px; margin:0 auto; padding:14px 28px; display:flex; align-items:center; gap:20px; }
   .brand { display:flex; align-items:center; gap:10px; text-decoration:none; color:#e7e9ee; }
   .brand-logo { width:30px; height:30px; border-radius:8px; box-shadow:0 0 18px rgba(45,200,235,0.4); }
-  .brand-name { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:17px; letter-spacing:-0.02em; }
+  .brand-name { font-family:'Inter',sans-serif; font-weight:700; font-size:17px; letter-spacing:-0.02em; }
   .brand-docs { font-family:'JetBrains Mono',monospace; font-size:11px; color:#6b7280; border:1px solid rgba(255,255,255,0.12); border-radius:6px; padding:2px 7px; margin-left:2px; }
   .dnav-right { margin-left:auto; display:flex; align-items:center; gap:16px; }
   .dnav-lnk { color:#9098a6; text-decoration:none; font-size:14px; font-weight:500; transition:color .15s; }
   .dnav-lnk:hover { color:#e7e9ee; }
-  .lang-toggle { display:flex; border:1px solid rgba(255,255,255,0.1); border-radius:8px; overflow:hidden; font-family:'JetBrains Mono',monospace; font-size:12px; }
-  .lang-btn { padding:5px 10px; text-decoration:none; line-height:1.5; }
   .icon-lnk { display:flex; align-items:center; color:#9098a6; transition:color .15s; }
   .icon-lnk:hover { color:#e7e9ee; }
 
@@ -151,12 +158,13 @@ const pageTitle = `${title} — NoMoreRP Docs`;
 
   /* SIDEBAR */
   .sidebar { position:sticky; top:60px; align-self:start; height:calc(100vh - 60px); overflow-y:auto; padding:36px 0 40px; }
-  .side-group { margin-bottom:26px; }
-  .side-title { font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:#565d6b; margin:0 0 10px; }
-  .side-list { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:1px; }
-  .side-lnk { display:block; text-decoration:none; color:#9098a6; font-size:14px; padding:6px 12px; border-radius:8px; border-left:2px solid transparent; transition:color .15s, background .15s; }
-  .side-lnk:hover { color:#e7e9ee; background:rgba(255,255,255,0.03); }
-  .side-lnk.active { color:#3dd6f3; background:rgba(45,200,235,0.08); border-left-color:#3dd6f3; font-weight:600; }
+  .side-group { margin-bottom:28px; }
+  .side-group:last-child { margin-bottom:0; }
+  .side-title { font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:0.1em; text-transform:uppercase; color:#4d5361; margin:0 0 8px; padding:0 14px; }
+  .side-list { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px; border-left:1px solid rgba(255,255,255,0.06); }
+  .side-lnk { display:block; text-decoration:none; color:#8a92a0; font-size:13.5px; line-height:1.4; padding:6px 14px; margin-left:-1px; border-left:2px solid transparent; transition:color .15s ease, border-color .15s ease; }
+  .side-lnk:hover { color:#e7e9ee; border-left-color:rgba(255,255,255,0.2); }
+  .side-lnk.active { color:#e7e9ee; border-left-color:rgba(255,255,255,0.55); font-weight:600; }
 
   /* CONTENT */
   .content { min-width:0; padding:44px 0 80px; }
@@ -167,7 +175,7 @@ const pageTitle = `${title} — NoMoreRP Docs`;
   .pager-lnk:hover { border-color:rgba(45,200,235,0.4); background:rgba(45,200,235,0.03); }
   .pager-lnk.next { text-align:right; margin-left:auto; }
   .pager-dir { font-family:'JetBrains Mono',monospace; font-size:12px; color:#6b7280; }
-  .pager-label { font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:15px; color:#e7e9ee; }
+  .pager-label { font-family:'Inter',sans-serif; font-weight:600; font-size:15px; color:#e7e9ee; }
 
   /* TOC */
   .toc { position:sticky; top:60px; align-self:start; height:calc(100vh - 60px); overflow-y:auto; padding:48px 0 40px; }
@@ -195,9 +203,9 @@ const pageTitle = `${title} — NoMoreRP Docs`;
   .prose { font-size:15.5px; line-height:1.72; color:#c3cad6; max-width:760px; }
   .prose > :first-child { margin-top:0; }
 
-  .prose h1 { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:38px; line-height:1.12; letter-spacing:-0.03em; color:#f2f4f8; margin:0 0 8px; text-wrap:balance; }
-  .prose h2 { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:25px; letter-spacing:-0.02em; color:#f2f4f8; margin:52px 0 16px; padding-top:8px; scroll-margin-top:80px; }
-  .prose h3 { font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:18.5px; letter-spacing:-0.01em; color:#e7e9ee; margin:34px 0 12px; scroll-margin-top:80px; }
+  .prose h1 { font-family:'Inter',sans-serif; font-weight:700; font-size:38px; line-height:1.12; letter-spacing:-0.03em; color:#f2f4f8; margin:0 0 8px; text-wrap:balance; }
+  .prose h2 { font-family:'Inter',sans-serif; font-weight:700; font-size:25px; letter-spacing:-0.02em; color:#f2f4f8; margin:52px 0 16px; padding-top:8px; scroll-margin-top:80px; }
+  .prose h3 { font-family:'Inter',sans-serif; font-weight:600; font-size:18.5px; letter-spacing:-0.01em; color:#e7e9ee; margin:34px 0 12px; scroll-margin-top:80px; }
   .prose h2 + h3 { margin-top:20px; }
 
   /* The subtitle: a lead paragraph right after the H1. */
