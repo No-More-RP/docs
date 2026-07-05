@@ -39,6 +39,12 @@ const translations = {
 <div class="search-modal" data-search-modal hidden>
   <div class="search-backdrop" data-search-close></div>
   <div class="search-panel" role="dialog" aria-modal="true" aria-label={ui.searchPlaceholder}>
+    <div class="search-head">
+      <span class="search-head-title">{ui.searchPlaceholder}</span>
+      <button class="search-close" type="button" data-search-close aria-label="Close">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12" /></svg>
+      </button>
+    </div>
     <div id="search"></div>
   </div>
 </div>
@@ -110,6 +116,43 @@ const translations = {
     overflow: hidden;
   }
 
+  .search-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 11px 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  }
+  .search-head-title {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #6b7280;
+  }
+  .search-close {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: #9098a6;
+    transition:
+      color 0.15s,
+      border-color 0.15s,
+      background 0.15s;
+  }
+  .search-close:hover {
+    color: #e7e9ee;
+    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.08);
+  }
+
   /* Pagefind UI theming (variables cascade into its injected DOM). */
   #search {
     --pagefind-ui-scale: 0.9;
@@ -123,18 +166,33 @@ const translations = {
     --pagefind-ui-font: "Inter", system-ui, sans-serif;
     padding: 14px;
   }
-  /* Input: replace the browser's focus outline with a cyan ring. */
+  /* Input: white text + cyan focus ring (replaces the browser outline). */
+  #search :global(.pagefind-ui__search-input) {
+    color: #e7e9ee;
+  }
   #search :global(.pagefind-ui__search-input:focus) {
     outline: none;
     border-color: #3dd6f3;
     box-shadow: 0 0 0 3px rgba(45, 200, 235, 0.15);
   }
+  /* "Clear" button — compact, subtle pill. */
   #search :global(.pagefind-ui__search-clear) {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     color: #9098a6;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 6px 11px;
+    border-radius: 8px;
+    transition:
+      color 0.15s,
+      border-color 0.15s,
+      background 0.15s;
   }
   #search :global(.pagefind-ui__search-clear:hover) {
     color: #e7e9ee;
+    border-color: rgba(45, 200, 235, 0.4);
+    background: rgba(45, 200, 235, 0.08);
   }
 
   /* Matched-term highlight: cyan instead of the default yellow. */

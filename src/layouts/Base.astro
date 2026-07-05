@@ -1,73 +1,154 @@
 ---
 interface Props {
-  title?: string;
-  lang?: string;
-  description?: string;
-  /** Absolute URL of the Open Graph / Twitter card image. */
-  image?: string;
-  /** Absolute canonical URL of the page. */
-  canonical?: string;
-  /** Open Graph object type. */
-  type?: 'website' | 'article';
+    title?: string;
+    lang?: string;
+    description?: string;
+    /** Absolute URL of the Open Graph / Twitter card image. */
+    image?: string;
+    /** Absolute canonical URL of the page. */
+    canonical?: string;
+    /** Open Graph object type. */
+    type?: "website" | "article";
+    /** JSON-LD structured data — one object or several. */
+    schema?: object | object[];
 }
 
 const DEFAULT_DESC =
-  'NoMoreRP — an object-oriented MVC gamemode base for nanos world, backed by dependency-free Lua packages for RPC, ORM, promises and i18n.';
+    "NoMoreRP — an object-oriented MVC gamemode base for nanos world, backed by dependency-free Lua packages for RPC, ORM, promises and i18n.";
 
 const {
-  title = 'NoMoreRP — MVC roleplay framework for nanos world',
-  lang = 'fr',
-  description = DEFAULT_DESC,
-  image,
-  canonical,
-  type = 'website',
+    title = "NoMoreRP — MVC roleplay framework for nanos world",
+    lang = "fr",
+    description = DEFAULT_DESC,
+    image,
+    canonical,
+    type = "website",
+    schema,
 } = Astro.props;
 
-const ogLocale = lang === 'fr' ? 'fr_FR' : 'en_US';
+const ogLocale = lang === "fr" ? "fr_FR" : "en_US";
+
+const schemas = schema ? (Array.isArray(schema) ? schema : [schema]) : [];
+// Escape "<" so a stray "</script>" inside content can't break out of the tag.
+const ld = (obj) => JSON.stringify(obj).replace(/</g, "\\u003c");
 ---
 
 <!doctype html>
 <html lang={lang}>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content={description} />
-    {canonical && <link rel="canonical" href={canonical} />}
-    <link rel="icon" type="image/png" href={`${import.meta.env.BASE_URL}nmrp_full_512.png`} />
-    <title>{title}</title>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="description" content={description} />
+        {canonical && <link rel="canonical" href={canonical} />}
+        <link
+            rel="icon"
+            type="image/png"
+            href={`${import.meta.env.BASE_URL}nmrp_full_512.png`}
+        />
+        <title>{title}</title>
 
-    <!-- Open Graph -->
-    <meta property="og:type" content={type} />
-    <meta property="og:site_name" content="NoMoreRP" />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
-    <meta property="og:locale" content={ogLocale} />
-    {canonical && <meta property="og:url" content={canonical} />}
-    {image && <meta property="og:image" content={image} />}
-    {image && <meta property="og:image:width" content="1200" />}
-    {image && <meta property="og:image:height" content="630" />}
-    {image && <meta property="og:image:alt" content={title} />}
+        <!-- Open Graph -->
+        <meta property="og:type" content={type} />
+        <meta property="og:site_name" content="NoMoreRP" />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:locale" content={ogLocale} />
+        {canonical && <meta property="og:url" content={canonical} />}
+        {image && <meta property="og:image" content={image} />}
+        {image && <meta property="og:image:width" content="1200" />}
+        {image && <meta property="og:image:height" content="630" />}
+        {image && <meta property="og:image:alt" content={title} />}
 
-    <!-- Twitter -->
-    <meta name="twitter:card" content={image ? 'summary_large_image' : 'summary'} />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={description} />
-    {image && <meta name="twitter:image" content={image} />}
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
-  </head>
-  <body>
-    <slot />
-  </body>
+        <!-- Twitter -->
+        <meta
+            name="twitter:card"
+            content={image ? "summary_large_image" : "summary"}
+        />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        {image && <meta name="twitter:image" content={image} />}
+
+        <!-- JSON-LD structured data -->
+        {
+            schemas.map((s) => (
+                <script type="application/ld+json" set:html={ld(s)} />
+            ))
+        }
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+            rel="stylesheet"
+        />
+    </head>
+    <body>
+        <slot />
+    </body>
 </html>
 
 <style is:global>
-  * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body { background: #08090c; }
-  ::selection { background: #3dd6f3; color: #08090c; }
-  @keyframes nmrpFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-  @keyframes nmrpBlink { 0%,49% { opacity: 1; } 50%,100% { opacity: 0; } }
+    * {
+        box-sizing: border-box;
+    }
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+    }
+    html {
+        scroll-behavior: smooth;
+    }
+    body {
+        background: #08090c;
+    }
+    ::selection {
+        background: #3dd6f3;
+        color: #08090c;
+    }
+
+    /* Thin, dark, subtle scrollbars everywhere (code panels, docs, sidebar…). */
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 255, 255, 0.16) transparent;
+    }
+    ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.14);
+        border-radius: 8px;
+        border: 2px solid transparent;
+        background-clip: padding-box;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.26);
+        background-clip: padding-box;
+    }
+    ::-webkit-scrollbar-corner {
+        background: transparent;
+    }
+    @keyframes nmrpFloat {
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-8px);
+        }
+    }
+    @keyframes nmrpBlink {
+        0%,
+        49% {
+            opacity: 1;
+        }
+        50%,
+        100% {
+            opacity: 0;
+        }
+    }
 </style>

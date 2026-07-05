@@ -3,7 +3,8 @@ import Base from "./Base.astro";
 import LangSwitch from "../components/LangSwitch.astro";
 import Search from "../components/Search.astro";
 import { docsNav, docsUi } from "../data/docs-nav.js";
-import { SITE_URL, DOCS_URL, DISCORD_URL } from "../data/site.js";
+import { SITE_URL, DOCS_URL, DISCORD_URL, EDIT_BASE } from "../data/site.js";
+import { techArticleSchema, breadcrumbSchema } from "../data/schema.js";
 
 interface Heading {
     depth: number;
@@ -16,9 +17,18 @@ interface Props {
     title: string;
     description?: string;
     headings?: Heading[];
+    /** Repo-relative path of the source file, for the "Edit this page" link. */
+    editPath?: string;
 }
 
-const { lang = "fr", slug, title, description, headings = [] } = Astro.props;
+const {
+    lang = "fr",
+    slug,
+    title,
+    description,
+    headings = [],
+    editPath,
+} = Astro.props;
 const isEn = lang === "en";
 const ui = docsUi[lang];
 const nav = docsNav[lang];
@@ -54,6 +64,28 @@ const ogImage = `${DOCS_URL}/og/${isEn ? "en" : "fr"}/${slug}.png`;
 const copyLabels = isEn
     ? { copy: "Copy", copied: "Copied!" }
     : { copy: "Copier", copied: "Copié !" };
+
+// JSON-LD: the page as a TechArticle + a breadcrumb (Docs › group › page).
+const docsBaseUrl = `${DOCS_URL}/${isEn ? "en/" : ""}`;
+const group = nav.find((g) => g.items.some((i) => i.slug === slug));
+const crumbs = [{ name: ui.docsLabel, url: `${docsBaseUrl}introduction` }];
+if (group)
+    crumbs.push({ name: group.group, url: `${docsBaseUrl}${group.items[0].slug}` });
+crumbs.push({ name: title, url: canonical });
+
+const schema = [
+    techArticleSchema({
+        title,
+        description,
+        lang,
+        url: canonical,
+        image: ogImage,
+    }),
+    breadcrumbSchema(crumbs),
+];
+
+// "Edit this page" → the source file in the GitHub repo (opens GitHub's editor).
+const editUrl = editPath ? `${EDIT_BASE}/${editPath}` : null;
 ---
 
 <Base
@@ -63,6 +95,7 @@ const copyLabels = isEn
     canonical={canonical}
     image={ogImage}
     type="article"
+    schema={schema}
 >
     <div class="docs">
         <div class="glow"></div>
@@ -276,6 +309,25 @@ const copyLabels = isEn
                 <article class="prose" data-pagefind-body>
                     <slot />
                 </article>
+
+                {
+                    editUrl && (
+                        <div class="doc-edit">
+                            <a
+                                href={editUrl}
+                                target="_blank"
+                                rel="noopener"
+                                class="doc-edit-lnk"
+                            >
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M12 20h9" />
+                                    <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z" />
+                                </svg>
+                                {ui.editPage}
+                            </a>
+                        </div>
+                    )
+                }
 
                 <nav class="pager">
                     {
@@ -560,11 +612,29 @@ const copyLabels = isEn
     }
 
     /* PAGER */
+    .doc-edit {
+        margin-top: 48px;
+    }
+    .doc-edit-lnk {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        color: #7b8290;
+        font-size: 13.5px;
+        transition: color 0.15s;
+    }
+    .doc-edit-lnk:hover {
+        color: #3dd6f3;
+    }
+    .doc-edit-lnk svg {
+        flex-shrink: 0;
+    }
     .pager {
         display: flex;
         justify-content: space-between;
         gap: 16px;
-        margin-top: 56px;
+        margin-top: 24px;
         padding-top: 28px;
         border-top: 1px solid rgba(255, 255, 255, 0.08);
     }
