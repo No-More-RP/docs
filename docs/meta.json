@@ -1,0 +1,32 @@
+{
+  "sections": [
+    {
+      "id": "getting-started",
+      "label": { "fr": "Démarrage", "en": "Getting started" },
+      "pages": [
+        { "slug": "installation", "label": { "fr": "Installation", "en": "Installation" } }
+      ]
+    },
+    {
+      "id": "libraries",
+      "label": { "fr": "Librairies", "en": "Libraries" },
+      "pages": [
+        { "slug": "nmrp-promise", "label": { "fr": "nmrp-promise", "en": "nmrp-promise" } },
+        { "slug": "nmrp-rpc", "label": { "fr": "nmrp-rpc", "en": "nmrp-rpc" } },
+        { "slug": "nmrp-norm", "label": { "fr": "nmrp-norm", "en": "nmrp-norm" } },
+        { "slug": "nmrp-locale", "label": { "fr": "nmrp-locale", "en": "nmrp-locale" } }
+      ]
+    },
+    {
+      "id": "addons",
+      "label": { "fr": "Add-ons", "en": "Add-ons" },
+      "pages": [
+        {
+          "slug": "nmrp-character-needs",
+          "label": { "fr": "nmrp-character-needs", "en": "nmrp-character-needs" }
+        }
+      ]
+    }
+  ],
+  "pages": []
+}
