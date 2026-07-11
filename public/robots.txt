@@ -1,6 +1,0 @@
-User-agent: *
-Allow: /
-
-# Same file is served on both hosts (nmrp.dev + docs.nmrp.dev).
-Sitemap: https://nmrp.dev/sitemap-index.xml
-Sitemap: https://docs.nmrp.dev/sitemap-index.xml
