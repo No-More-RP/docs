@@ -4,27 +4,34 @@
       "id": "getting-started",
       "label": { "fr": "Démarrage", "en": "Getting started" },
       "pages": [
+        { "slug": "introduction", "label": { "fr": "Introduction", "en": "Introduction" } },
         { "slug": "installation", "label": { "fr": "Installation", "en": "Installation" } }
+      ]
+    },
+    {
+      "id": "core",
+      "label": { "fr": "Cœur", "en": "Core" },
+      "pages": [
+        { "slug": "nmrp", "label": { "fr": "nmrp", "en": "nmrp" } },
+        { "slug": "light-class", "label": { "fr": "light-class", "en": "light-class" } }
       ]
     },
     {
       "id": "libraries",
       "label": { "fr": "Librairies", "en": "Libraries" },
       "pages": [
-        { "slug": "nmrp-promise", "label": { "fr": "nmrp-promise", "en": "nmrp-promise" } },
-        { "slug": "nmrp-rpc", "label": { "fr": "nmrp-rpc", "en": "nmrp-rpc" } },
-        { "slug": "nmrp-norm", "label": { "fr": "nmrp-norm", "en": "nmrp-norm" } },
-        { "slug": "nmrp-locale", "label": { "fr": "nmrp-locale", "en": "nmrp-locale" } }
+        { "slug": "promise", "label": { "fr": "nmrp-promise", "en": "nmrp-promise" } },
+        { "slug": "rpc", "label": { "fr": "nmrp-rpc", "en": "nmrp-rpc" } },
+        { "slug": "norm", "label": { "fr": "nmrp-norm", "en": "nmrp-norm" } },
+        { "slug": "locale", "label": { "fr": "nmrp-locale", "en": "nmrp-locale" } },
+        { "slug": "ui", "label": { "fr": "nmrp-ui", "en": "nmrp-ui" } }
       ]
     },
     {
       "id": "addons",
       "label": { "fr": "Add-ons", "en": "Add-ons" },
       "pages": [
-        {
-          "slug": "nmrp-character-needs",
-          "label": { "fr": "nmrp-character-needs", "en": "nmrp-character-needs" }
-        }
+        { "slug": "character-needs", "label": { "fr": "nmrp-character-needs", "en": "nmrp-character-needs" } }
       ]
     }
   ],
